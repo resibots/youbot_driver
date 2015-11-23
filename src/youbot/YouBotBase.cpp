@@ -160,28 +160,115 @@ void YouBotBase::setBasePosition(const quantity<si::length>& longitudinalPositio
     
     if (wheelPositions.size() < BASEJOINTS)
       throw std::out_of_range("To less wheel velocities");
-    
+
     joints[0].setEncoderToZero();
     joints[1].setEncoderToZero();
     joints[2].setEncoderToZero();
     joints[3].setEncoderToZero();
     SLEEP_MILLISEC(10);
-
+    
     ethercatMaster.AutomaticSendOn(false);
-    joints[0].getData(sensedPos);
+    joints[0].getData(sensedPos);    
     setpointPos.angle = sensedPos.angle + wheelPositions[0];
+    LOG(info) << "Joint 0: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[0] << " - AngleSetPoint " << setpointPos.angle;
     joints[0].setData(setpointPos);
     
     joints[1].getData(sensedPos);
     setpointPos.angle = sensedPos.angle + wheelPositions[1];
+    LOG(info) << "Joint 1: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[1] << " - AngleSetPoint " << setpointPos.angle;
     joints[1].setData(setpointPos);
     
     joints[2].getData(sensedPos);
     setpointPos.angle = sensedPos.angle + wheelPositions[2];
+    LOG(info) << "Joint 2: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[2] << " - AngleSetPoint " << setpointPos.angle;
     joints[2].setData(setpointPos);
     
     joints[3].getData(sensedPos);
     setpointPos.angle = sensedPos.angle + wheelPositions[3];
+    LOG(info) << "Joint 3: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[3] << " - AngleSetPoint " << setpointPos.angle;
+    joints[3].setData(setpointPos);
+    ethercatMaster.AutomaticSendOn(true);
+
+  // Bouml preserved body end 000C0971
+}
+
+///displace the base in cartesian space
+///@param longitudinalDisplacement is the forward or backward displacement
+///@param transversalDisplacement is the sideway displacement
+void YouBotBase::setBaseDisplacement(const quantity<si::length>& longitudinalDisplacement, const quantity<si::length>& transversalDisplacement) {
+  // Bouml preserved body begin 000C0971
+
+    std::vector<quantity<plane_angle> > wheelPositions;
+    quantity<plane_angle> dummyAngle;
+    JointAngleSetpoint setpointPos;
+    wheelPositions.assign(BASEJOINTS, dummyAngle);
+    JointSensedAngle sensedPos;
+
+    youBotBaseKinematic.cartesianPositionToWheelPositions(longitudinalDisplacement, transversalDisplacement, 0 * radian, wheelPositions);
+    
+    if (wheelPositions.size() < BASEJOINTS)
+      throw std::out_of_range("To less wheel velocities");
+
+    ethercatMaster.AutomaticSendOn(false);
+    joints[0].getData(sensedPos);    
+    setpointPos.angle = sensedPos.angle + wheelPositions[0];
+    LOG(info) << "Joint 0: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[0] << " - AngleSetPoint " << setpointPos.angle;
+    joints[0].setData(setpointPos);
+    
+    joints[1].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[1];
+    LOG(info) << "Joint 1: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[1] << " - AngleSetPoint " << setpointPos.angle;
+    joints[1].setData(setpointPos);
+    
+    joints[2].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[2];
+    LOG(info) << "Joint 2: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[2] << " - AngleSetPoint " << setpointPos.angle;
+    joints[2].setData(setpointPos);
+    
+    joints[3].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[3];
+    LOG(info) << "Joint 3: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[3] << " - AngleSetPoint " << setpointPos.angle;
+    joints[3].setData(setpointPos);
+    ethercatMaster.AutomaticSendOn(true);
+
+  // Bouml preserved body end 000C0971
+}
+
+///rotate the base in cartesian space
+///@param rotation is the rotation around the center of the YouBot
+void YouBotBase::setBaseRotation(const quantity<plane_angle>& rotation) {
+  // Bouml preserved body begin 000C0971
+
+    std::vector<quantity<plane_angle> > wheelPositions;
+    quantity<plane_angle> dummyAngle;
+    JointAngleSetpoint setpointPos;
+    wheelPositions.assign(BASEJOINTS, dummyAngle);
+    JointSensedAngle sensedPos;
+
+    youBotBaseKinematic.cartesianPositionToWheelPositions(0 * meter, 0 * meter, rotation, wheelPositions);
+    
+    if (wheelPositions.size() < BASEJOINTS)
+      throw std::out_of_range("To less wheel velocities");
+    
+    ethercatMaster.AutomaticSendOn(false);
+    joints[0].getData(sensedPos);    
+    setpointPos.angle = sensedPos.angle + wheelPositions[0];
+    LOG(info) << "Joint 0: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[0] << " - AngleSetPoint " << setpointPos.angle;
+    joints[0].setData(setpointPos);
+    
+    joints[1].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[1];
+    LOG(info) << "Joint 1: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[1] << " - AngleSetPoint " << setpointPos.angle;
+    joints[1].setData(setpointPos);
+    
+    joints[2].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[2];
+    LOG(info) << "Joint 2: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[2] << " - AngleSetPoint " << setpointPos.angle;
+    joints[2].setData(setpointPos);
+    
+    joints[3].getData(sensedPos);
+    setpointPos.angle = sensedPos.angle + wheelPositions[3];
+    LOG(info) << "Joint 3: SensedPos " << sensedPos.angle << " - WheelPosition " << wheelPositions[3] << " - AngleSetPoint " << setpointPos.angle;
     joints[3].setData(setpointPos);
     ethercatMaster.AutomaticSendOn(true);
 
@@ -681,6 +768,8 @@ void YouBotBase::initializeJoints() {
         joints[i].trajectoryController.setInverseMovementDirection(invdir);
 				ethercatMasterWithThread->registerJointTrajectoryController(&(joints[i].trajectoryController), joints[i].getJointNumber());
 			}
+
+        joints[i].setEncoderToZero();
     }
 
     return;
