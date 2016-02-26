@@ -9,7 +9,7 @@
 
   <license>LGPLv2.1, modified BSD</license>
 
-  <url type="website">http://github.com/youbot/youbot_driver</url>
+  <url type="website">https://github.com/resibots/youbot_driver</url>
   
   <buildtool_depend>catkin</buildtool_depend>
 

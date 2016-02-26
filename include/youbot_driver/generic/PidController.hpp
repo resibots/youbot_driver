@@ -34,15 +34,13 @@
 #ifndef PIDCONTROLLER_HPP
 #define PIDCONTROLLER_HPP
 
-
 #include <string>
 #include "youbot_driver/generic/Time.hpp"
 
-
 namespace youbot {
 
-/***************************************************/
-/*! \class PidController
+    /***************************************************/
+    /*! \class PidController
     \brief A basic pid class.
 
     This class implements a generic structure that
@@ -85,19 +83,18 @@ double position_desi_ = 0.5;
 ros::Time last_time = ros::Time::now();
 while (true) {
   ros::Time time = ros::Time::now();
-  double effort = pid.updatePid(currentPosition() - position_desi_, time - last_time);
+  double effort = pid.updatePid(currentPosition() - position_desi_, time -
+last_time);
   last_time = time;
 }
 \endverbatim
 
 */
-/***************************************************/
+    /***************************************************/
 
-class PidController
-{
-public:
-
-  /*!
+    class PidController {
+    public:
+        /*!
    * \brief Constructor, zeros out Pid values when created and
    * initialize Pid-gains and integral term limits:[iMax:iMin]-[I1:I2].
    *
@@ -107,22 +104,23 @@ public:
    * \param I1 The integral upper limit.
    * \param I2 The integral lower limit.
    */
-  PidController(double P = 0.0, double I = 0.0, double D = 0.0, double I1 = 0.0, double I2 = -0.0);
+        PidController(double P = 0.0, double I = 0.0, double D = 0.0, double I1 = 0.0,
+            double I2 = -0.0);
 
-  /*!
+        /*!
    * \brief Destructor of Pid class.
    */
-  ~PidController();
+        ~PidController();
 
-  /*!
+        /*!
    * \brief Update the Pid loop with nonuniform time step size.
    *
    * \param p_error  Error since last call (p_state-p_target)
    * \param dt Change in time since last call
    */
-  double updatePid(double p_error, boost::posix_time::time_duration dt);
+        double updatePid(double p_error, boost::posix_time::time_duration dt);
 
-  /*!
+        /*!
    * \brief Initialize PID-gains and integral term limits:[iMax:iMin]-[I1:I2]
    *
    * \param P  The proportional gain.
@@ -131,32 +129,32 @@ public:
    * \param I1 The integral upper limit.
    * \param I2 The integral lower limit.
    */
-  void initPid(double P, double I, double D, double I1, double I2);
-  
-  /*!
+        void initPid(double P, double I, double D, double I1, double I2);
+
+        /*!
    * \brief Reset the state of this PID controller
    */
-  void reset();
+        void reset();
 
-  /*!
+        /*!
    * \brief Set current command for this PID controller
    */
-  void setCurrentCmd(double cmd);
+        void setCurrentCmd(double cmd);
 
-  /*!
+        /*!
    * \brief Return current command for this PID controller
    */
-  double getCurrentCmd();
+        double getCurrentCmd();
 
-  /*!
+        /*!
    * \brief Return PID error terms for the controller.
    * \param pe  The proportional error.
    * \param ie  The integral error.
    * \param de  The derivative error.
    */
-  void getCurrentPIDErrors(double& pe, double& ie, double& de);
+        void getCurrentPIDErrors(double& pe, double& ie, double& de);
 
-  /*!
+        /*!
    * \brief Set PID gains for the controller.
    * \param P  The proportional gain.
    * \param I  The integral gain.
@@ -164,9 +162,9 @@ public:
    * \param i_max
    * \param i_min
    */
-  void setGains(double P, double I, double D, double i_max, double i_min);
+        void setGains(double P, double I, double D, double i_max, double i_min);
 
-  /*!
+        /*!
    * \brief Get PID gains for the controller.
    * \param p  The proportional gain.
    * \param i  The integral gain.
@@ -174,47 +172,48 @@ public:
    * \param i_max The max integral windup.
    * \param i_mim The min integral windup.
    */
-  void getGains(double &p, double &i, double &d, double &i_max, double &i_min);
+        void getGains(double& p, double& i, double& d, double& i_max, double& i_min);
 
-  /*!
-   * \brief Update the Pid loop with nonuniform time step size. This update call 
-   * allows the user to pass in a precomputed derivative error. 
+        /*!
+   * \brief Update the Pid loop with nonuniform time step size. This update call
+   * allows the user to pass in a precomputed derivative error.
    *
    * \param error  Error since last call (p_state-p_target)
    * \param error_dot d(Error)/dt since last call
    * \param dt Change in time since last call
    */
-  double updatePid(double error, double error_dot, boost::posix_time::time_duration dt);
+        double updatePid(double error, double error_dot,
+            boost::posix_time::time_duration dt);
 
-  PidController &operator =(const PidController& p)
-  {
-    if (this == &p)
-      return *this;
+        PidController& operator=(const PidController& p)
+        {
+            if (this == &p)
+                return *this;
 
-    p_gain_ = p.p_gain_;
-    i_gain_ = p.i_gain_;
-    d_gain_ = p.d_gain_;
-    i_max_ = p.i_max_;
-    i_min_ = p.i_min_;
+            p_gain_ = p.p_gain_;
+            i_gain_ = p.i_gain_;
+            d_gain_ = p.d_gain_;
+            i_max_ = p.i_max_;
+            i_min_ = p.i_min_;
 
-    p_error_last_ = p_error_ = i_error_ = d_error_ = cmd_ = 0.0;
-    return *this;
-  }
+            p_error_last_ = p_error_ = i_error_ = d_error_ = cmd_ = 0.0;
+            return *this;
+        }
 
-private:
-  double p_error_last_; /**< _Save position state for derivative state calculation. */
-  double p_error_; /**< Position error. */
-  double d_error_; /**< Derivative error. */
-  double i_error_; /**< Integator error. */
-  double p_gain_;  /**< Proportional gain. */
-  double i_gain_;  /**< Integral gain. */
-  double d_gain_;  /**< Derivative gain. */
-  double i_max_;   /**< Maximum allowable integral term. */
-  double i_min_;   /**< Minimum allowable integral term. */
-  double cmd_;     /**< Command to send. */
-  double last_i_error;
-};
-
+    private:
+        double p_error_last_; /**< _Save position state for derivative state
+                           calculation. */
+        double p_error_; /**< Position error. */
+        double d_error_; /**< Derivative error. */
+        double i_error_; /**< Integator error. */
+        double p_gain_; /**< Proportional gain. */
+        double i_gain_; /**< Integral gain. */
+        double d_gain_; /**< Derivative gain. */
+        double i_max_; /**< Maximum allowable integral term. */
+        double i_min_; /**< Minimum allowable integral term. */
+        double cmd_; /**< Command to send. */
+        double last_i_error;
+    };
 }
 
 #endif

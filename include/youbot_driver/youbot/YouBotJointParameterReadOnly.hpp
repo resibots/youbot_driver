@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -64,428 +64,462 @@
 #include "youbot_driver/youbot/YouBotJointStorage.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// abstract youBot joint parameter which can be read only
-///////////////////////////////////////////////////////////////////////////////
-class YouBotJointParameterReadOnly : public JointParameter {
-friend class YouBotJoint;
-  protected:
-    YouBotJointParameterReadOnly();
+    ///////////////////////////////////////////////////////////////////////////////
+    /// abstract youBot joint parameter which can be read only
+    ///////////////////////////////////////////////////////////////////////////////
+    class YouBotJointParameterReadOnly : public JointParameter {
+        friend class YouBotJoint;
+
+    protected:
+        YouBotJointParameterReadOnly();
 
+    public:
+        virtual ~YouBotJointParameterReadOnly();
 
-  public:
-    virtual ~YouBotJointParameterReadOnly();
+        virtual void toString(std::string& value) = 0;
 
-    virtual void toString(std::string& value) = 0;
+    protected:
+        virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const = 0;
 
+        virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage) = 0;
 
-  protected:
-    virtual void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const = 0;
+        virtual std::string getName() const = 0;
 
-    virtual void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage) = 0;
+        virtual ParameterType getType() const = 0;
 
-    virtual std::string getName() const = 0;
+        std::string name;
 
-    virtual ParameterType getType() const = 0;
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual supply voltage.
+    ///////////////////////////////////////////////////////////////////////////////
+    class ActualMotorVoltage : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    std::string name;
+    public:
+        ActualMotorVoltage();
 
-    ParameterType parameterType;
+        virtual ~ActualMotorVoltage();
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual supply voltage.
-///////////////////////////////////////////////////////////////////////////////
-class ActualMotorVoltage : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    ActualMotorVoltage();
+        void getParameter(quantity<electric_potential>& parameter) const;
 
-    virtual ~ActualMotorVoltage();
+        void toString(std::string& value);
 
-    void getParameter(quantity<electric_potential>& parameter) const;
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    void toString(std::string& value);
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
+        std::string getName() const { return this->name; };
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        /// testt
+        ParameterType getType() const { return this->parameterType; };
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        quantity<electric_potential> value;
 
-    std::string getName() const {return this->name;};
+        std::string name;
 
-    /// testt
-    ParameterType getType() const {return this->parameterType;};
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Error and Status flags of the joint.
+    /// Bit 0: Overcurrent flag. This flag is set if overcurrent limit is exceeded.
+    /// \n
+    /// Bit 1: Undervoltage flag. This flag is set if supply voltage to low for
+    /// motor operation. \n
+    /// Bit 2: Overvoltage flag. This flag is set if the motor becomes switched off
+    /// due to overvoltage. \n
+    /// Bit 3: Overtemperature flag. This flag is set if overtemperature limit is
+    /// exceeded. \n
+    /// Bit 4: Motor halted flag. This flag is set if motor has been switched off.
+    /// \n
+    /// Bit 5: Hall error flag. This flag is set upon a hall error. \n
+    /// Bit 6: Encoder error flag. This flag is set upon an encoder error. \n
+    /// Bit 7: Winding error flag. [currently not used] \n
+    /// Bit 8: Cycle time violation. [currently not used] \n
+    /// Bit 9: Initialization error of sine commutation. This flag is set if
+    /// initialization is failed. \n
+    /// Bit 10: Position mode flag. This flag is set when the module is in
+    /// positioning mode. \n
+    /// Bit 11: Position end flag. This flag becomes set if the motor has been
+    /// stopped at the end position. \n
+    ///////////////////////////////////////////////////////////////////////////////
+    class ErrorAndStatus : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    quantity<electric_potential> value;
+    public:
+        ErrorAndStatus();
 
-    std::string name;
+        virtual ~ErrorAndStatus();
 
-    ParameterType parameterType;
+        void getParameter(unsigned int& parameter) const;
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Error and Status flags of the joint. 
-/// Bit 0: Overcurrent flag. This flag is set if overcurrent limit is exceeded. \n
-/// Bit 1: Undervoltage flag. This flag is set if supply voltage to low for motor operation. \n
-/// Bit 2: Overvoltage flag. This flag is set if the motor becomes switched off due to overvoltage. \n
-/// Bit 3: Overtemperature flag. This flag is set if overtemperature limit is exceeded. \n
-/// Bit 4: Motor halted flag. This flag is set if motor has been switched off. \n
-/// Bit 5: Hall error flag. This flag is set upon a hall error. \n
-/// Bit 6: Encoder error flag. This flag is set upon an encoder error. \n
-/// Bit 7: Winding error flag. [currently not used] \n
-/// Bit 8: Cycle time violation. [currently not used] \n
-/// Bit 9: Initialization error of sine commutation. This flag is set if initialization is failed. \n
-/// Bit 10: Position mode flag. This flag is set when the module is in positioning mode. \n
-/// Bit 11: Position end flag. This flag becomes set if the motor has been stopped at the end position. \n
-///////////////////////////////////////////////////////////////////////////////
-class ErrorAndStatus : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    ErrorAndStatus();
+        void toString(std::string& value);
 
-    virtual ~ErrorAndStatus();
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    void getParameter(unsigned int& parameter) const;
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    void toString(std::string& value);
+        std::string getName() const { return this->name; };
 
+        ParameterType getType() const { return this->parameterType; };
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        void parseYouBotErrorFlags() const;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        unsigned int value;
 
-    std::string getName() const {return this->name;};
+        std::string name;
 
-    ParameterType getType() const {return this->parameterType;};
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual error of PID position regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class PositionError : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    void parseYouBotErrorFlags() const;
+    public:
+        PositionError();
 
-    unsigned int value;
+        virtual ~PositionError();
 
-    std::string name;
+        void getParameter(quantity<plane_angle>& parameter) const;
 
-    ParameterType parameterType;
+        void toString(std::string& value);
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual error of PID position regulator
-///////////////////////////////////////////////////////////////////////////////
-class PositionError : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    PositionError();
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    virtual ~PositionError();
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    void getParameter(quantity<plane_angle>& parameter) const;
+        std::string getName() const { return this->name; };
 
-    void toString(std::string& value);
+        ParameterType getType() const { return this->parameterType; };
 
+        quantity<plane_angle> value;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        std::string name;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Sums of errors of PID position regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class PositionErrorSum : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    std::string getName() const {return this->name;};
+    public:
+        PositionErrorSum();
 
-    ParameterType getType() const {return this->parameterType;};
+        virtual ~PositionErrorSum();
 
-    quantity<plane_angle> value;
+        void getParameter(quantity<plane_angle>& parameter) const;
 
-    std::string name;
+        void toString(std::string& value);
 
-    ParameterType parameterType;
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Sums of errors of PID position regulator
-///////////////////////////////////////////////////////////////////////////////
-class PositionErrorSum : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    PositionErrorSum();
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    virtual ~PositionErrorSum();
+        std::string getName() const { return this->name; };
 
-    void getParameter(quantity<plane_angle>& parameter) const;
+        ParameterType getType() const { return this->parameterType; };
 
-    void toString(std::string& value);
+        quantity<plane_angle> value;
 
+        std::string name;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual error of PID velocity regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class VelocityError : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+    public:
+        VelocityError();
 
-    std::string getName() const {return this->name;};
+        virtual ~VelocityError();
 
-    ParameterType getType() const {return this->parameterType;};
+        void getParameter(quantity<si::angular_velocity>& parameter) const;
 
-    quantity<plane_angle> value;
+        void toString(std::string& value);
 
-    std::string name;
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    ParameterType parameterType;
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual error of PID velocity regulator
-///////////////////////////////////////////////////////////////////////////////
-class VelocityError : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    VelocityError();
+        std::string getName() const { return this->name; };
 
-    virtual ~VelocityError();
+        ParameterType getType() const { return this->parameterType; };
 
-    void getParameter(quantity<si::angular_velocity>& parameter) const;
+        quantity<si::angular_velocity> value;
 
-    void toString(std::string& value);
+        std::string name;
 
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Sums of Errors of PID velocity regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class VelocityErrorSum : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+    public:
+        VelocityErrorSum();
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        virtual ~VelocityErrorSum();
 
-    std::string getName() const {return this->name;};
+        void getParameter(quantity<si::angular_velocity>& parameter) const;
 
-    ParameterType getType() const {return this->parameterType;};
+        void toString(std::string& value);
 
-    quantity<si::angular_velocity> value;
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    std::string name;
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    ParameterType parameterType;
+        std::string getName() const { return this->name; };
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Sums of Errors of PID velocity regulator
-///////////////////////////////////////////////////////////////////////////////
-class VelocityErrorSum : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    VelocityErrorSum();
+        ParameterType getType() const { return this->parameterType; };
 
-    virtual ~VelocityErrorSum();
+        quantity<si::angular_velocity> value;
 
-    void getParameter(quantity<si::angular_velocity>& parameter) const;
+        std::string name;
 
-    void toString(std::string& value);
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual error of current PID regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class CurrentError : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
+    public:
+        CurrentError();
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        virtual ~CurrentError();
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        void getParameter(quantity<si::current>& parameter) const;
 
-    std::string getName() const {return this->name;};
+        void toString(std::string& value);
 
-    ParameterType getType() const {return this->parameterType;};
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    quantity<si::angular_velocity> value;
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    std::string name;
+        std::string getName() const { return this->name; };
 
-    ParameterType parameterType;
+        ParameterType getType() const { return this->parameterType; };
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual error of current PID regulator
-///////////////////////////////////////////////////////////////////////////////
-class CurrentError : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    CurrentError();
+        quantity<si::current> value;
 
-    virtual ~CurrentError();
+        std::string name;
 
-    void getParameter(quantity<si::current>& parameter) const;
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Sum of errors of current PID regulator
+    ///////////////////////////////////////////////////////////////////////////////
+    class CurrentErrorSum : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    void toString(std::string& value);
+    public:
+        CurrentErrorSum();
 
+        virtual ~CurrentErrorSum();
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        void getParameter(quantity<si::current>& parameter) const;
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        void toString(std::string& value);
 
-    std::string getName() const {return this->name;};
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    ParameterType getType() const {return this->parameterType;};
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    quantity<si::current> value;
+        std::string getName() const { return this->name; };
 
-    std::string name;
+        ParameterType getType() const { return this->parameterType; };
 
-    ParameterType parameterType;
+        quantity<si::current> value;
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Sum of errors of current PID regulator
-///////////////////////////////////////////////////////////////////////////////
-class CurrentErrorSum : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    CurrentErrorSum();
+        std::string name;
 
-    virtual ~CurrentErrorSum();
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// The actual speed of the velocity ramp used for positioning and velocity
+    /// mode.
+    ///////////////////////////////////////////////////////////////////////////////
+    class RampGeneratorSpeed : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    void getParameter(quantity<si::current>& parameter) const;
+    public:
+        RampGeneratorSpeed();
 
-    void toString(std::string& value);
+        virtual ~RampGeneratorSpeed();
 
+        void getParameter(quantity<si::angular_velocity>& parameter) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        void toString(std::string& value);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    std::string getName() const {return this->name;};
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    ParameterType getType() const {return this->parameterType;};
+        std::string getName() const { return this->name; };
 
-    quantity<si::current> value;
+        ParameterType getType() const { return this->parameterType; };
 
-    std::string name;
+        quantity<si::angular_velocity> value;
 
-    ParameterType parameterType;
+        std::string name;
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// The actual speed of the velocity ramp used for positioning and velocity mode. 
-///////////////////////////////////////////////////////////////////////////////
-class RampGeneratorSpeed : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    RampGeneratorSpeed();
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual sum of the I2t monitor.
+    ///////////////////////////////////////////////////////////////////////////////
+    class I2tSum : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    virtual ~RampGeneratorSpeed();
+    public:
+        I2tSum();
 
-    void getParameter(quantity<si::angular_velocity>& parameter) const;
+        virtual ~I2tSum();
 
-    void toString(std::string& value);
+        void getParameter(unsigned int& parameter) const;
 
+        void setParameter(const unsigned int parameter);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        void toString(std::string& value);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    std::string getName() const {return this->name;};
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    ParameterType getType() const {return this->parameterType;};
+        std::string getName() const { return this->name; };
 
-    quantity<si::angular_velocity> value;
+        ParameterType getType() const { return this->parameterType; };
 
-    std::string name;
+        unsigned int upperLimit;
 
-    ParameterType parameterType;
+        unsigned int lowerLimit;
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual sum of the I2t monitor.
-///////////////////////////////////////////////////////////////////////////////
-class I2tSum : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    I2tSum();
+        unsigned int value;
 
-    virtual ~I2tSum();
+        std::string name;
 
-    void getParameter(unsigned int& parameter) const;
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Actual temperature of the motor driver.
+    ///////////////////////////////////////////////////////////////////////////////
+    class ActualMotorDriverTemperature : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    void setParameter(const unsigned int parameter);
+    public:
+        ActualMotorDriverTemperature();
 
-    void toString(std::string& value);
+        virtual ~ActualMotorDriverTemperature();
 
+        void getParameter(quantity<celsius::temperature>& parameter) const;
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        void toString(std::string& value);
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
-    std::string getName() const {return this->name;};
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-    ParameterType getType() const {return this->parameterType;};
+        std::string getName() const { return this->name; };
 
-    unsigned int upperLimit;
+        ParameterType getType() const { return this->parameterType; };
 
-    unsigned int lowerLimit;
+        quantity<celsius::temperature> value;
 
-    unsigned int value;
+        std::string name;
 
-    std::string name;
+        ParameterType parameterType;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Get actual supply current of the module.
+    ///////////////////////////////////////////////////////////////////////////////
+    class ActualModuleSupplyCurrent : public YouBotJointParameterReadOnly {
+        friend class YouBotJoint;
 
-    ParameterType parameterType;
+    public:
+        ActualModuleSupplyCurrent();
 
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Actual temperature of the motor driver. 
-///////////////////////////////////////////////////////////////////////////////
-class ActualMotorDriverTemperature : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    ActualMotorDriverTemperature();
+        virtual ~ActualModuleSupplyCurrent();
 
-    virtual ~ActualMotorDriverTemperature();
+        void getParameter(quantity<si::current>& parameter) const;
 
-    void getParameter(quantity<celsius::temperature>& parameter) const;
+        void toString(std::string& value);
 
-    void toString(std::string& value);
+    private:
+        void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message,
+            TMCLCommandNumber msgType,
+            const YouBotJointStorage& storage) const;
 
+        void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message,
+            const YouBotJointStorage& storage);
 
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
+        std::string getName() const { return this->name; };
 
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
+        ParameterType getType() const { return this->parameterType; };
 
-    std::string getName() const {return this->name;};
+        quantity<si::current> value;
 
-    ParameterType getType() const {return this->parameterType;};
+        std::string name;
 
-    quantity<celsius::temperature> value;
-
-    std::string name;
-
-    ParameterType parameterType;
-
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Get actual supply current of the module.
-///////////////////////////////////////////////////////////////////////////////
-class ActualModuleSupplyCurrent : public YouBotJointParameterReadOnly {
-friend class YouBotJoint;
-  public:
-    ActualModuleSupplyCurrent();
-
-    virtual ~ActualModuleSupplyCurrent();
-
-    void getParameter(quantity<si::current>& parameter) const;
-
-    void toString(std::string& value);
-
-
-  private:
-    void getYouBotMailboxMsg(YouBotSlaveMailboxMsg& message, TMCLCommandNumber msgType, const YouBotJointStorage& storage) const;
-
-    void setYouBotMailboxMsg(const YouBotSlaveMailboxMsg& message, const YouBotJointStorage& storage);
-
-    std::string getName() const {return this->name;};
-
-    ParameterType getType() const {return this->parameterType;};
-
-    quantity<si::current> value;
-
-    std::string name;
-
-    ParameterType parameterType;
-
-};
+        ParameterType parameterType;
+    };
 
 } // namespace youbot
 #endif

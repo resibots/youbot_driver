@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -56,23 +56,34 @@
 #include "youbot_driver/generic/Units.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// abstract class of a base / platform kinematic
-///////////////////////////////////////////////////////////////////////////////
-class BaseKinematic {
-};
-///////////////////////////////////////////////////////////////////////////////
-/// abstract class of a wheeled based / platform kinematic
-///////////////////////////////////////////////////////////////////////////////
-class WheeledBaseKinematic : public BaseKinematic {
-  public:
-    virtual void cartesianVelocityToWheelVelocities(const quantity<si::velocity>& longitudinalVelocity, const quantity<si::velocity>& transversalVelocity, const quantity<angular_velocity>& angularVelocity, std::vector<quantity<angular_velocity> >& wheelVelocities) = 0;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// abstract class of a base / platform kinematic
+    ///////////////////////////////////////////////////////////////////////////////
+    class BaseKinematic {
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// abstract class of a wheeled based / platform kinematic
+    ///////////////////////////////////////////////////////////////////////////////
+    class WheeledBaseKinematic : public BaseKinematic {
+    public:
+        virtual void cartesianVelocityToWheelVelocities(
+            const quantity<si::velocity>& longitudinalVelocity,
+            const quantity<si::velocity>& transversalVelocity,
+            const quantity<angular_velocity>& angularVelocity,
+            std::vector<quantity<angular_velocity> >& wheelVelocities) = 0;
 
-    virtual void wheelVelocitiesToCartesianVelocity(const std::vector<quantity<angular_velocity> >& wheelVelocities, quantity<si::velocity>& longitudinalVelocity, quantity<si::velocity>& transversalVelocity, quantity<angular_velocity>& angularVelocity) = 0;
+        virtual void wheelVelocitiesToCartesianVelocity(
+            const std::vector<quantity<angular_velocity> >& wheelVelocities,
+            quantity<si::velocity>& longitudinalVelocity,
+            quantity<si::velocity>& transversalVelocity,
+            quantity<angular_velocity>& angularVelocity) = 0;
 
-    virtual void wheelPositionsToCartesianPosition(const std::vector<quantity<plane_angle> >& wheelPositions, quantity<si::length>& longitudinalPosition, quantity<si::length>& transversalPosition, quantity<plane_angle>& orientation) = 0;
-
-};
+        virtual void wheelPositionsToCartesianPosition(
+            const std::vector<quantity<plane_angle> >& wheelPositions,
+            quantity<si::length>& longitudinalPosition,
+            quantity<si::length>& transversalPosition,
+            quantity<plane_angle>& orientation) = 0;
+    };
 
 } // namespace youbot
 #endif

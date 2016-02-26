@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -70,131 +70,146 @@ namespace youbot {
 
 /// The number of base joints
 #define BASEJOINTS 4
-///////////////////////////////////////////////////////////////////////////////
-/// It groups the base joints together
-///////////////////////////////////////////////////////////////////////////////
-class YouBotBase {
-  public:
-    YouBotBase(const std::string name, const std::string configFilePath = "../config/");
+    ///////////////////////////////////////////////////////////////////////////////
+    /// It groups the base joints together
+    ///////////////////////////////////////////////////////////////////////////////
+    class YouBotBase {
+    public:
+        YouBotBase(const std::string name,
+            const std::string configFilePath = "../config/");
 
-    virtual ~YouBotBase();
+        virtual ~YouBotBase();
 
-    ///does the sine commutation of the base joints
-    void doJointCommutation();
+        /// does the sine commutation of the base joints
+        void doJointCommutation();
 
-    ///return a joint form the base
-    ///@param baseJointNumber 1-4 for the base joints
-    YouBotJoint& getBaseJoint(const unsigned int baseJointNumber);
+        /// return a joint form the base
+        ///@param baseJointNumber 1-4 for the base joints
+        YouBotJoint& getBaseJoint(const unsigned int baseJointNumber);
 
-    ///gets the cartesien base position which is calculated from the odometry
-    ///@param longitudinalPosition is the forward or backward position
-    ///@param transversalPosition is the sideway position
-    ///@param orientation is the rotation around the center of the YouBot
-    void getBasePosition(quantity<si::length>& longitudinalPosition, quantity<si::length>& transversalPosition, quantity<plane_angle>& orientation);
+        /// gets the cartesien base position which is calculated from the odometry
+        ///@param longitudinalPosition is the forward or backward position
+        ///@param transversalPosition is the sideway position
+        ///@param orientation is the rotation around the center of the YouBot
+        void getBasePosition(quantity<si::length>& longitudinalPosition,
+            quantity<si::length>& transversalPosition,
+            quantity<plane_angle>& orientation);
 
-    ///sets the cartesien base position
-    ///@param longitudinalPosition is the forward or backward target position
-    ///@param transversalPosition is the sideway target position
-    ///@param orientation is the rotation around the center of the YouBot
-    void setBasePosition(const quantity<si::length>& longitudinalPosition, const quantity<si::length>& transversalPosition, const quantity<plane_angle>& orientation);
+        /// sets the cartesien base position
+        ///@param longitudinalPosition is the forward or backward target position
+        ///@param transversalPosition is the sideway target position
+        ///@param orientation is the rotation around the center of the YouBot
+        void setBasePosition(const quantity<si::length>& longitudinalPosition,
+            const quantity<si::length>& transversalPosition,
+            const quantity<plane_angle>& orientation);
 
-    ///displace the base in cartesian space
-    ///@param longitudinalDisplacement is the forward or backward displacement
-    ///@param transversalDisplacement is the sideway displacement
-    void setBaseDisplacement(const quantity<si::length>& longitudinalDisplacement, const quantity<si::length>& transversalDisplacement);
+        /// displace the base in cartesian space
+        ///@param longitudinalDisplacement is the forward or backward displacement
+        ///@param transversalDisplacement is the sideway displacement
+        void setBaseDisplacement(const quantity<si::length>& longitudinalDisplacement,
+            const quantity<si::length>& transversalDisplacement);
 
-    ///rotate the base in cartesian space
-    ///@param rotation is the rotation around the center of the YouBot
-    void setBaseRotation(const quantity<plane_angle>& rotation);
+        /// rotate the base in cartesian space
+        ///@param rotation is the rotation around the center of the YouBot
+        void setBaseRotation(const quantity<plane_angle>& rotation);
 
-    ///gets the cartesien base velocity
-    ///@param longitudinalVelocity is the forward or backward velocity
-    ///@param transversalVelocity is the sideway velocity
-    ///@param angularVelocity is the rotational velocity around the center of the YouBot
-    void getBaseVelocity(quantity<si::velocity>& longitudinalVelocity, quantity<si::velocity>& transversalVelocity, quantity<si::angular_velocity>& angularVelocity);
+        /// gets the cartesien base velocity
+        ///@param longitudinalVelocity is the forward or backward velocity
+        ///@param transversalVelocity is the sideway velocity
+        ///@param angularVelocity is the rotational velocity around the center of the
+        /// YouBot
+        void getBaseVelocity(quantity<si::velocity>& longitudinalVelocity,
+            quantity<si::velocity>& transversalVelocity,
+            quantity<si::angular_velocity>& angularVelocity);
 
-    ///commands the base in cartesien velocities
-    ///@param longitudinalVelocity is the forward or backward velocity
-    ///@param transversalVelocity is the sideway velocity
-    ///@param angularVelocity is the rotational velocity around the center of the YouBot
-    void setBaseVelocity(const quantity<si::velocity>& longitudinalVelocity, const quantity<si::velocity>& transversalVelocity, const quantity<si::angular_velocity>& angularVelocity);
+        /// commands the base in cartesien velocities
+        ///@param longitudinalVelocity is the forward or backward velocity
+        ///@param transversalVelocity is the sideway velocity
+        ///@param angularVelocity is the rotational velocity around the center of the
+        /// YouBot
+        void setBaseVelocity(const quantity<si::velocity>& longitudinalVelocity,
+            const quantity<si::velocity>& transversalVelocity,
+            const quantity<si::angular_velocity>& angularVelocity);
 
-    ///This class represents the kinematic of the YouBot 
-    FourSwedishWheelOmniBaseKinematic youBotBaseKinematic;
+        /// This class represents the kinematic of the YouBot
+        FourSwedishWheelOmniBaseKinematic youBotBaseKinematic;
 
-    ///commands positions or angles to all base joints
-    ///all positions will be set at the same time
-    ///@param JointData the to command positions
-    virtual void setJointData(const std::vector<JointAngleSetpoint>& JointData);
+        /// commands positions or angles to all base joints
+        /// all positions will be set at the same time
+        ///@param JointData the to command positions
+        virtual void setJointData(const std::vector<JointAngleSetpoint>& JointData);
 
-    ///gets the position or angle of all base joints which have been calculated from the actual encoder value
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the angles by reference
-    virtual void getJointData(std::vector<JointSensedAngle>& data);
+        /// gets the position or angle of all base joints which have been calculated
+        /// from the actual encoder value
+        /// These values are all read at the same time from the different joints
+        ///@param data returns the angles by reference
+        virtual void getJointData(std::vector<JointSensedAngle>& data);
 
-    ///commands velocities to all base joints
-    ///all velocities will be set at the same time
-    ///@param JointData the to command velocities
-    virtual void setJointData(const std::vector<JointVelocitySetpoint>& JointData);
+        /// commands velocities to all base joints
+        /// all velocities will be set at the same time
+        ///@param JointData the to command velocities
+        virtual void
+        setJointData(const std::vector<JointVelocitySetpoint>& JointData);
 
-    ///gets the velocities of all base joints which have been calculated from the actual encoder values
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the velocities by reference
-    virtual void getJointData(std::vector<JointSensedVelocity>& data);
+        /// gets the velocities of all base joints which have been calculated from the
+        /// actual encoder values
+        /// These values are all read at the same time from the different joints
+        ///@param data returns the velocities by reference
+        virtual void getJointData(std::vector<JointSensedVelocity>& data);
 
-    ///commands current to all base joints
-    ///all current values will be set at the same time
-    ///@param JointData the to command current
-    virtual void setJointData(const std::vector<JointCurrentSetpoint>& JointData);
+        /// commands current to all base joints
+        /// all current values will be set at the same time
+        ///@param JointData the to command current
+        virtual void setJointData(const std::vector<JointCurrentSetpoint>& JointData);
 
-    ///gets the motor currents of all base joints which have been measured by a hal sensor
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the actual motor currents by reference
-    virtual void getJointData(std::vector<JointSensedCurrent>& data);
+        /// gets the motor currents of all base joints which have been measured by a
+        /// hal sensor
+        /// These values are all read at the same time from the different joints
+        ///@param data returns the actual motor currents by reference
+        virtual void getJointData(std::vector<JointSensedCurrent>& data);
 
-    ///commands torque to all base joints
-    ///all torque values will be set at the same time
-    ///@param JointData the to command torque 
-    virtual void setJointData(const std::vector<JointTorqueSetpoint>& JointData);
+        /// commands torque to all base joints
+        /// all torque values will be set at the same time
+        ///@param JointData the to command torque
+        virtual void setJointData(const std::vector<JointTorqueSetpoint>& JointData);
 
-    ///gets the joint torque of all base joints which have been calculated from the current
-    ///These values are all read at the same time from the different joints 
-    ///@param data returns the actual joint torque by reference
-    virtual void getJointData(std::vector<JointSensedTorque>& data);
+        /// gets the joint torque of all base joints which have been calculated from
+        /// the current
+        /// These values are all read at the same time from the different joints
+        ///@param data returns the actual joint torque by reference
+        virtual void getJointData(std::vector<JointSensedTorque>& data);
 
+    private:
+        YouBotBase(const YouBotBase& source);
 
-  private:
-    YouBotBase(const YouBotBase & source);
+        YouBotBase& operator=(const YouBotBase& source);
 
-    YouBotBase & operator=(const YouBotBase & source);
+        /// does the commutation of the arm joints with firmware 2.0
+        void commutationFirmware200();
 
-    ///does the commutation of the arm joints with firmware 2.0
-    void commutationFirmware200();
+        /// does the commutation of the arm joints with firmware 1.48 and below
+        void commutationFirmware148();
 
-    ///does the commutation of the arm joints with firmware 1.48 and below
-    void commutationFirmware148();
+        void initializeJoints();
 
-    void initializeJoints();
+        void initializeKinematic();
 
-    void initializeKinematic();
+        boost::scoped_ptr<ConfigFile> configfile;
 
-    boost::scoped_ptr<ConfigFile> configfile;
+        boost::ptr_vector<YouBotJoint> joints;
 
-    boost::ptr_vector<YouBotJoint> joints;
+        int controllerType;
 
-    int controllerType;
+        int alternativeControllerType;
 
-    int alternativeControllerType;
+        EthercatMasterInterface& ethercatMaster;
 
-    EthercatMasterInterface& ethercatMaster;
+        EthercatMasterWithThread* ethercatMasterWithThread;
 
-    EthercatMasterWithThread* ethercatMasterWithThread;
+        std::vector<std::string> supportedFirmwareVersions;
 
-    std::vector<std::string> supportedFirmwareVersions;
-
-    std::string actualFirmwareVersionAllJoints;
-
-};
+        std::string actualFirmwareVersionAllJoints;
+    };
 
 } // namespace youbot
 #endif

@@ -52,7 +52,6 @@
 #ifndef _EXCEPTIONS_HPP
 #define _EXCEPTIONS_HPP
 
-
 #include <exception>
 #include <stdexcept>
 #include <iostream>
@@ -61,106 +60,97 @@
 using namespace std;
 namespace youbot {
 
-		/// File not found exception
+    /// File not found exception
     class FileNotFoundException : public std::ios_base::failure {
         string msg;
 
     public:
         // Takes a character string describing the error.
-        explicit FileNotFoundException(const string& message) throw ()
-            :std::ios_base::failure(message) {
-            msg = message + " file not found" ;
+        explicit FileNotFoundException(const string& message) throw()
+            : std::ios_base::failure(message)
+        {
+            msg = message + " file not found";
         };
 
-        virtual ~FileNotFoundException() throw () {
-        };
+        virtual ~FileNotFoundException() throw(){};
 
-        // Returns a C-style character string describing the general cause of the current error
-        virtual const char* what() const throw () {
-            return msg.c_str();
-        };
+        // Returns a C-style character string describing the general cause of the
+        // current error
+        virtual const char* what() const throw() { return msg.c_str(); };
     };
 
-		/// Key in configuration file not found exception
+    /// Key in configuration file not found exception
     class KeyNotFoundException : public std::ios_base::failure {
         string msg;
 
     public:
         // Takes a character string describing the error.
-        explicit KeyNotFoundException(const string& message) throw ()
-            :std::ios_base::failure(message) {
-            msg = message + " key in config file not found" ;
+        explicit KeyNotFoundException(const string& message) throw()
+            : std::ios_base::failure(message)
+        {
+            msg = message + " key in config file not found";
         };
 
-        virtual ~KeyNotFoundException() throw () {
-        };
+        virtual ~KeyNotFoundException() throw(){};
 
-        // Returns a C-style character string describing the general cause of the current error
-        virtual const char* what() const throw () {
-            return msg.c_str();
-        };
+        // Returns a C-style character string describing the general cause of the
+        // current error
+        virtual const char* what() const throw() { return msg.c_str(); };
     };
-		/// Joint parameter exception
+    /// Joint parameter exception
     class JointParameterException : public std::runtime_error {
         string msg;
 
     public:
         // Takes a character string describing the error.
         explicit JointParameterException(const string& message) throw()
-            : std::runtime_error(message) {
+            : std::runtime_error(message)
+        {
             msg = message;
         };
 
-        virtual ~JointParameterException() throw () {
-        };
+        virtual ~JointParameterException() throw(){};
 
-        // Returns a C-style character string describing the general cause of the current error
-        virtual const char* what() const throw () {
-            return msg.c_str();
-        };
+        // Returns a C-style character string describing the general cause of the
+        // current error
+        virtual const char* what() const throw() { return msg.c_str(); };
     };
-		/// Joint error exception
-   class JointErrorException : public std::runtime_error {
+    /// Joint error exception
+    class JointErrorException : public std::runtime_error {
         string msg;
 
     public:
         // Takes a character string describing the error.
-        explicit JointErrorException(const string& message) throw ()
-            :std::runtime_error(message) {
+        explicit JointErrorException(const string& message) throw()
+            : std::runtime_error(message)
+        {
             msg = message;
         };
 
-        virtual ~JointErrorException() throw () {
-        };
+        virtual ~JointErrorException() throw(){};
 
-        // Returns a C-style character string describing the general cause of the current error
-        virtual const char* what() const throw () {
-            return msg.c_str();
-        };
+        // Returns a C-style character string describing the general cause of the
+        // current error
+        virtual const char* what() const throw() { return msg.c_str(); };
     };
-		/// EtherCAT Connection Error
-   class EtherCATConnectionException : public std::runtime_error {
+    /// EtherCAT Connection Error
+    class EtherCATConnectionException : public std::runtime_error {
         string msg;
 
     public:
         // Takes a character string describing the error.
-        explicit EtherCATConnectionException(const string& message) throw ()
-            :std::runtime_error(message) {
+        explicit EtherCATConnectionException(const string& message) throw()
+            : std::runtime_error(message)
+        {
             msg = message;
         };
 
-        virtual ~EtherCATConnectionException() throw () {
-        };
+        virtual ~EtherCATConnectionException() throw(){};
 
-        // Returns a C-style character string describing the general cause of the current error
-        virtual const char* what() const throw () {
-            return msg.c_str();
-        };
+        // Returns a C-style character string describing the general cause of the
+        // current error
+        virtual const char* what() const throw() { return msg.c_str(); };
     };
-
-
-
-
 
 } // namespace youbot
 #endif //_EXCEPTIONS_HPP

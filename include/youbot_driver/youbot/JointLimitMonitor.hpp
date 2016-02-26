@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -59,54 +59,55 @@
 
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// It monitors the joint position and will decelerate and stop the joint if it is close the limits
-///////////////////////////////////////////////////////////////////////////////
-class JointLimitMonitor {
-  public:
-    JointLimitMonitor(const YouBotJointStorage& jointParameters, const quantity<angular_acceleration>& jointAcceleration);
+    ///////////////////////////////////////////////////////////////////////////////
+    /// It monitors the joint position and will decelerate and stop the joint if it
+    /// is close the limits
+    ///////////////////////////////////////////////////////////////////////////////
+    class JointLimitMonitor {
+    public:
+        JointLimitMonitor(const YouBotJointStorage& jointParameters,
+            const quantity<angular_acceleration>& jointAcceleration);
 
-    virtual ~JointLimitMonitor();
+        virtual ~JointLimitMonitor();
 
-    JointLimitMonitor(const JointLimitMonitor & source);
+        JointLimitMonitor(const JointLimitMonitor& source);
 
-    JointLimitMonitor & operator=(const JointLimitMonitor & source);
+        JointLimitMonitor& operator=(const JointLimitMonitor& source);
 
-    void checkLimitsPositionControl(const quantity<plane_angle>& setpoint);
+        void checkLimitsPositionControl(const quantity<plane_angle>& setpoint);
 
-    void checkLimitsEncoderPosition(const signed int& setpoint);
+        void checkLimitsEncoderPosition(const signed int& setpoint);
 
-    void checkLimitsProcessData(const SlaveMessageInput& messageInput, SlaveMessageOutput& messageOutput);
+        void checkLimitsProcessData(const SlaveMessageInput& messageInput,
+            SlaveMessageOutput& messageOutput);
 
+    private:
+        double calculateDamping(const int actualPosition);
 
-  private:
-    double calculateDamping(const int actualPosition);
+        void calculateBrakingDistance(const SlaveMessageInput& messageInput);
 
-    void calculateBrakingDistance(const SlaveMessageInput& messageInput);
+        int calculateBrakingVelocity(const int actualPosition);
 
-    int calculateBrakingVelocity(const int actualPosition);
+        YouBotJointStorage storage;
 
-    YouBotJointStorage storage;
+        double acceleration;
 
-    double acceleration;
+        int bevorLowerLimit;
 
-    int bevorLowerLimit;
+        int bevorUpperLimit;
 
-    int bevorUpperLimit;
+        int brakingDistance;
 
-    int brakingDistance;
+        double actualVelocityRPS;
 
-    double actualVelocityRPS;
+        bool isbraking;
 
-    bool isbraking;
+        int velocityWhenReachedLimit;
 
-    int velocityWhenReachedLimit;
+        double distanceToLimit;
 
-    double distanceToLimit;
-
-    double newVelocity;
-
-};
+        double newVelocity;
+    };
 
 } // namespace youbot
 #endif

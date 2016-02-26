@@ -16,7 +16,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -48,8 +48,6 @@
  * License LGPL and BSD license along with this program.
  *
  ****************************************************************/
-#include "youbot_driver/base-kinematic/WheeledBaseKinematic.hpp" 
+#include "youbot_driver/base-kinematic/WheeledBaseKinematic.hpp"
 namespace youbot {
-
-
 } // namespace youbot

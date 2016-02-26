@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -53,36 +53,35 @@
  ****************************************************************/
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// Stores YouBotJoint informations which are needed in the driver
-///////////////////////////////////////////////////////////////////////////////
-class YouBotJointStorage {
-  public:
-    unsigned int encoderTicksPerRound;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Stores YouBotJoint informations which are needed in the driver
+    ///////////////////////////////////////////////////////////////////////////////
+    class YouBotJointStorage {
+    public:
+        unsigned int encoderTicksPerRound;
 
-    std::string jointName;
+        std::string jointName;
 
-    unsigned int jointNumber;
+        unsigned int jointNumber;
 
-    std::string jointNumberStr;
+        std::string jointNumberStr;
 
-    double gearRatio;
+        double gearRatio;
 
-    bool inverseMovementDirection;
+        bool inverseMovementDirection;
 
-    long upperLimit;
+        long upperLimit;
 
-    long lowerLimit;
+        long lowerLimit;
 
-    bool areLimitsActive;
+        bool areLimitsActive;
 
-    double torqueConstant;
+        double torqueConstant;
 
-    long bevorUpperLimit;
+        long bevorUpperLimit;
 
-    long bevorLowerLimit;
-
-};
+        long bevorLowerLimit;
+    };
 
 } // namespace youbot
 #endif

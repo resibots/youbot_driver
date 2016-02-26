@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -57,20 +57,19 @@
 
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// abstract joint
-///////////////////////////////////////////////////////////////////////////////
-class Joint {
-  public:
-    virtual void setData(const JointDataSetpoint& data) = 0;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// abstract joint
+    ///////////////////////////////////////////////////////////////////////////////
+    class Joint {
+    public:
+        virtual void setData(const JointDataSetpoint& data) = 0;
 
-    virtual void getData(JointData& data) = 0;
+        virtual void getData(JointData& data) = 0;
 
-    virtual void setConfigurationParameter(const JointParameter& parameter) = 0;
+        virtual void setConfigurationParameter(const JointParameter& parameter) = 0;
 
-    virtual void getConfigurationParameter(JointParameter& parameter) = 0;
-
-};
+        virtual void getConfigurationParameter(JointParameter& parameter) = 0;
+    };
 
 } // namespace youbot
 #endif

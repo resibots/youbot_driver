@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -55,66 +55,85 @@
 #include "youbot_driver/generic/Logger.hpp"
 #include "youbot_driver/generic/Units.hpp"
 #include "youbot_driver/generic/Exceptions.hpp"
-#include "youbot_driver/base-kinematic/WheeledBaseKinematic.hpp" 
+#include "youbot_driver/base-kinematic/WheeledBaseKinematic.hpp"
 #include "youbot_driver/base-kinematic/FourSwedishWheelOmniBaseKinematicConfiguration.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// Implementation of a base kinematic with four swedish wheels. The youBot base kinematic.
-///////////////////////////////////////////////////////////////////////////////
-class FourSwedishWheelOmniBaseKinematic : public WheeledBaseKinematic {
-  public:
-    FourSwedishWheelOmniBaseKinematic();
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Implementation of a base kinematic with four swedish wheels. The youBot base
+    /// kinematic.
+    ///////////////////////////////////////////////////////////////////////////////
+    class FourSwedishWheelOmniBaseKinematic : public WheeledBaseKinematic {
+    public:
+        FourSwedishWheelOmniBaseKinematic();
 
-    virtual ~FourSwedishWheelOmniBaseKinematic();
+        virtual ~FourSwedishWheelOmniBaseKinematic();
 
-    ///Calculates from the cartesian velocity the individual wheel velocities 
-    ///@param longitudinalVelocity is the forward or backward velocity
-    ///@param transversalVelocity is the sideway velocity
-    ///@param angularVelocity is the rotational velocity around the center of the YouBot
-    ///@param wheelVelocities are the individual wheel velocities
-    virtual void cartesianVelocityToWheelVelocities(const quantity<si::velocity>& longitudinalVelocity, const quantity<si::velocity>& transversalVelocity, const quantity<si::angular_velocity>& angularVelocity, std::vector<quantity<angular_velocity> >& wheelVelocities);
+        /// Calculates from the cartesian velocity the individual wheel velocities
+        ///@param longitudinalVelocity is the forward or backward velocity
+        ///@param transversalVelocity is the sideway velocity
+        ///@param angularVelocity is the rotational velocity around the center of the
+        /// YouBot
+        ///@param wheelVelocities are the individual wheel velocities
+        virtual void cartesianVelocityToWheelVelocities(
+            const quantity<si::velocity>& longitudinalVelocity,
+            const quantity<si::velocity>& transversalVelocity,
+            const quantity<si::angular_velocity>& angularVelocity,
+            std::vector<quantity<angular_velocity> >& wheelVelocities);
 
-    ///Calculates from the wheel velocities the cartesian velocity
-    ///@param wheelVelocities are the velocities of the individual wheels
-    ///@param longitudinalVelocity is the forward or backward velocity
-    ///@param transversalVelocity is the sideway velocity
-    ///@param angularVelocity is the rotational velocity around the center of the YouBot
-    virtual void wheelVelocitiesToCartesianVelocity(const std::vector<quantity<angular_velocity> >& wheelVelocities, quantity<si::velocity>& longitudinalVelocity, quantity<si::velocity>& transversalVelocity, quantity<angular_velocity>& angularVelocity);
+        /// Calculates from the wheel velocities the cartesian velocity
+        ///@param wheelVelocities are the velocities of the individual wheels
+        ///@param longitudinalVelocity is the forward or backward velocity
+        ///@param transversalVelocity is the sideway velocity
+        ///@param angularVelocity is the rotational velocity around the center of the
+        /// YouBot
+        virtual void wheelVelocitiesToCartesianVelocity(
+            const std::vector<quantity<angular_velocity> >& wheelVelocities,
+            quantity<si::velocity>& longitudinalVelocity,
+            quantity<si::velocity>& transversalVelocity,
+            quantity<angular_velocity>& angularVelocity);
 
-    ///Calculates from the wheel positions the cartesian position
-    ///@param wheelPositions are the individual positions of the wheels
-    ///@param longitudinalPosition is the forward or backward position
-    ///@param transversalPosition is the sideway position
-    ///@param orientation is the rotation around the center
-    virtual void wheelPositionsToCartesianPosition(const std::vector<quantity<plane_angle> >& wheelPositions, quantity<si::length>& longitudinalPosition, quantity<si::length>& transversalPosition, quantity<plane_angle>& orientation);
+        /// Calculates from the wheel positions the cartesian position
+        ///@param wheelPositions are the individual positions of the wheels
+        ///@param longitudinalPosition is the forward or backward position
+        ///@param transversalPosition is the sideway position
+        ///@param orientation is the rotation around the center
+        virtual void wheelPositionsToCartesianPosition(
+            const std::vector<quantity<plane_angle> >& wheelPositions,
+            quantity<si::length>& longitudinalPosition,
+            quantity<si::length>& transversalPosition,
+            quantity<plane_angle>& orientation);
 
-    ///Calculates from the cartesian position the wheel positions
-    ///@param longitudinalPosition is the forward or backward position
-    ///@param transversalPosition is the sideway position
-    ///@param orientation is the rotation around the center
-    ///@param wheelPositions are the individual positions of the wheels
-    virtual void cartesianPositionToWheelPositions(const quantity<si::length>& longitudinalPosition, const quantity<si::length>& transversalPosition, const quantity<plane_angle>& orientation, std::vector<quantity<plane_angle> >& wheelPositions);
+        /// Calculates from the cartesian position the wheel positions
+        ///@param longitudinalPosition is the forward or backward position
+        ///@param transversalPosition is the sideway position
+        ///@param orientation is the rotation around the center
+        ///@param wheelPositions are the individual positions of the wheels
+        virtual void cartesianPositionToWheelPositions(
+            const quantity<si::length>& longitudinalPosition,
+            const quantity<si::length>& transversalPosition,
+            const quantity<plane_angle>& orientation,
+            std::vector<quantity<plane_angle> >& wheelPositions);
 
-    void setConfiguration(const FourSwedishWheelOmniBaseKinematicConfiguration& configuration);
+        void setConfiguration(
+            const FourSwedishWheelOmniBaseKinematicConfiguration& configuration);
 
-    void getConfiguration(FourSwedishWheelOmniBaseKinematicConfiguration& configuration) const;
+        void getConfiguration(
+            FourSwedishWheelOmniBaseKinematicConfiguration& configuration) const;
 
+    private:
+        FourSwedishWheelOmniBaseKinematicConfiguration config;
 
-  private:
-    FourSwedishWheelOmniBaseKinematicConfiguration config;
+        std::vector<quantity<plane_angle> > lastWheelPositions;
 
-    std::vector<quantity<plane_angle> > lastWheelPositions;
+        bool lastWheelPositionInitialized;
 
-    bool lastWheelPositionInitialized;
+        quantity<si::length> longitudinalPos;
 
-    quantity<si::length> longitudinalPos;
+        quantity<si::length> transversalPos;
 
-    quantity<si::length> transversalPos;
-
-    quantity<plane_angle> angle;
-
-};
+        quantity<plane_angle> angle;
+    };
 
 } // namespace youbot
 #endif

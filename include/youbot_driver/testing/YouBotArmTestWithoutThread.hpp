@@ -18,26 +18,25 @@ using namespace youbot;
 /// A unit test for the youBot arm
 ///////////////////////////////////////////////////////////////////////////////
 class YouBotArmTestWithoutThread : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(YouBotArmTestWithoutThread);
-	CPPUNIT_TEST(youBotArmTest);
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(YouBotArmTestWithoutThread);
+    CPPUNIT_TEST(youBotArmTest);
+    CPPUNIT_TEST_SUITE_END();
 
 public:
-	YouBotArmTestWithoutThread();
-	virtual ~YouBotArmTestWithoutThread();
+    YouBotArmTestWithoutThread();
+    virtual ~YouBotArmTestWithoutThread();
 
-	void setUp();
-	void tearDown();
+    void setUp();
+    void tearDown();
 
-
-	void youBotArmTest();
+    void youBotArmTest();
 
 private:
-	unsigned int overallTime;
-	unsigned int startTime;
-	unsigned int updateCycle;
-  const int dof;
-  EthercatMasterInterface* ethercatMaster;
+    unsigned int overallTime;
+    unsigned int startTime;
+    unsigned int updateCycle;
+    const int dof;
+    EthercatMasterInterface* ethercatMaster;
 };
 
-#endif //YouBotArmTestWithoutThread_H
+#endif // YouBotArmTestWithoutThread_H

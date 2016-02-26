@@ -16,7 +16,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -51,38 +51,47 @@
 #include "youbot_driver/base-kinematic/FourSwedishWheelOmniBaseKinematicConfiguration.hpp"
 namespace youbot {
 
-FourSwedishWheelOmniBaseKinematicConfiguration::FourSwedishWheelOmniBaseKinematicConfiguration() {
-  // Bouml preserved body begin 0004C271
-    this->rotationRatio = 1;
-    this->slideRatio = 1;
-  // Bouml preserved body end 0004C271
-}
+    FourSwedishWheelOmniBaseKinematicConfiguration::
+        FourSwedishWheelOmniBaseKinematicConfiguration()
+    {
+        // Bouml preserved body begin 0004C271
+        this->rotationRatio = 1;
+        this->slideRatio = 1;
+        // Bouml preserved body end 0004C271
+    }
 
-FourSwedishWheelOmniBaseKinematicConfiguration::~FourSwedishWheelOmniBaseKinematicConfiguration() {
-  // Bouml preserved body begin 0004C2F1
-  // Bouml preserved body end 0004C2F1
-}
+    FourSwedishWheelOmniBaseKinematicConfiguration::
+        ~FourSwedishWheelOmniBaseKinematicConfiguration()
+    {
+        // Bouml preserved body begin 0004C2F1
+        // Bouml preserved body end 0004C2F1
+    }
 
-FourSwedishWheelOmniBaseKinematicConfiguration::FourSwedishWheelOmniBaseKinematicConfiguration(const FourSwedishWheelOmniBaseKinematicConfiguration & source) {
-  // Bouml preserved body begin 0004C371
-    this->rotationRatio = source.rotationRatio;
-    this->slideRatio = source.slideRatio;
-    this->lengthBetweenFrontAndRearWheels = source.lengthBetweenFrontAndRearWheels;
-    this->lengthBetweenFrontWheels = source.lengthBetweenFrontWheels;
-    this->wheelRadius = source.wheelRadius;
-  // Bouml preserved body end 0004C371
-}
+    FourSwedishWheelOmniBaseKinematicConfiguration::
+        FourSwedishWheelOmniBaseKinematicConfiguration(
+            const FourSwedishWheelOmniBaseKinematicConfiguration& source)
+    {
+        // Bouml preserved body begin 0004C371
+        this->rotationRatio = source.rotationRatio;
+        this->slideRatio = source.slideRatio;
+        this->lengthBetweenFrontAndRearWheels = source.lengthBetweenFrontAndRearWheels;
+        this->lengthBetweenFrontWheels = source.lengthBetweenFrontWheels;
+        this->wheelRadius = source.wheelRadius;
+        // Bouml preserved body end 0004C371
+    }
 
-FourSwedishWheelOmniBaseKinematicConfiguration & FourSwedishWheelOmniBaseKinematicConfiguration::operator=(const FourSwedishWheelOmniBaseKinematicConfiguration & source) {
-  // Bouml preserved body begin 0004C3F1
-    this->rotationRatio = source.rotationRatio;
-    this->slideRatio = source.slideRatio;
-    this->lengthBetweenFrontAndRearWheels = source.lengthBetweenFrontAndRearWheels;
-    this->lengthBetweenFrontWheels = source.lengthBetweenFrontWheels;
-    this->wheelRadius = source.wheelRadius;
-    return *this;
-  // Bouml preserved body end 0004C3F1
-}
-
+    FourSwedishWheelOmniBaseKinematicConfiguration&
+        FourSwedishWheelOmniBaseKinematicConfiguration::
+        operator=(const FourSwedishWheelOmniBaseKinematicConfiguration& source)
+    {
+        // Bouml preserved body begin 0004C3F1
+        this->rotationRatio = source.rotationRatio;
+        this->slideRatio = source.slideRatio;
+        this->lengthBetweenFrontAndRearWheels = source.lengthBetweenFrontAndRearWheels;
+        this->lengthBetweenFrontWheels = source.lengthBetweenFrontWheels;
+        this->wheelRadius = source.wheelRadius;
+        return *this;
+        // Bouml preserved body end 0004C3F1
+    }
 
 } // namespace youbot

@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -56,31 +56,32 @@
 #include "youbot_driver/generic/Exceptions.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// Configuration for the base kinematic with four swedish wheels.
-///////////////////////////////////////////////////////////////////////////////
-class FourSwedishWheelOmniBaseKinematicConfiguration {
-  public:
-    FourSwedishWheelOmniBaseKinematicConfiguration();
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Configuration for the base kinematic with four swedish wheels.
+    ///////////////////////////////////////////////////////////////////////////////
+    class FourSwedishWheelOmniBaseKinematicConfiguration {
+    public:
+        FourSwedishWheelOmniBaseKinematicConfiguration();
 
-    ~FourSwedishWheelOmniBaseKinematicConfiguration();
+        ~FourSwedishWheelOmniBaseKinematicConfiguration();
 
-    FourSwedishWheelOmniBaseKinematicConfiguration(const FourSwedishWheelOmniBaseKinematicConfiguration & source);
+        FourSwedishWheelOmniBaseKinematicConfiguration(
+            const FourSwedishWheelOmniBaseKinematicConfiguration& source);
 
-    FourSwedishWheelOmniBaseKinematicConfiguration & operator=(const FourSwedishWheelOmniBaseKinematicConfiguration & source);
+        FourSwedishWheelOmniBaseKinematicConfiguration&
+        operator=(const FourSwedishWheelOmniBaseKinematicConfiguration& source);
 
-    quantity<si::length> wheelRadius;
+        quantity<si::length> wheelRadius;
 
-    quantity<si::length> lengthBetweenFrontWheels;
+        quantity<si::length> lengthBetweenFrontWheels;
 
-    quantity<si::length> lengthBetweenFrontAndRearWheels;
+        quantity<si::length> lengthBetweenFrontAndRearWheels;
 
-    //how far sideways in one wheel rotation compared to forward
-    double slideRatio;
+        // how far sideways in one wheel rotation compared to forward
+        double slideRatio;
 
-    double rotationRatio;
-
-};
+        double rotationRatio;
+    };
 
 } // namespace youbot
 #endif

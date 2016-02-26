@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -65,241 +65,242 @@
 #include "youbot_driver/youbot/YouBotSlaveMsg.hpp"
 #include "youbot_driver/youbot/YouBotSlaveMailboxMsg.hpp"
 #include "youbot_driver/youbot/EthercatMasterInterface.hpp"
-#include "youbot_driver/youbot/JointTrajectoryController.hpp"
 #include "youbot_driver/youbot/JointLimitMonitor.hpp"
 
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// youBot joint for the base and the manipulator.
-/// Every motor, encoder, transmition combination of the youBot base or manipulator is a YouBotJoint
-///////////////////////////////////////////////////////////////////////////////
-class YouBotJoint : public Joint {
-  public:
-    YouBotJoint(const unsigned int jointNo, const std::string& configFilePath = "../config/");
+    ///////////////////////////////////////////////////////////////////////////////
+    /// youBot joint for the base and the manipulator.
+    /// Every motor, encoder, transmition combination of the youBot base or
+    /// manipulator is a YouBotJoint
+    ///////////////////////////////////////////////////////////////////////////////
+    class YouBotJoint : public Joint {
+    public:
+        YouBotJoint(const unsigned int jointNo,
+            const std::string& configFilePath = "../config/");
 
-    ~YouBotJoint();
+        ~YouBotJoint();
 
+    private:
+        YouBotJoint(const YouBotJoint& source);
 
-  private:
-    YouBotJoint(const YouBotJoint & source);
+        YouBotJoint& operator=(const YouBotJoint& source);
 
-    YouBotJoint & operator=(const YouBotJoint & source);
+    protected:
+        virtual void setConfigurationParameter(const JointParameter& parameter);
 
+        virtual void getConfigurationParameter(JointParameter& parameter);
 
-  protected:
-    virtual void setConfigurationParameter(const JointParameter& parameter);
+    public:
+        virtual void
+        getConfigurationParameter(YouBotJointParameterReadOnly& parameter);
 
-    virtual void getConfigurationParameter(JointParameter& parameter);
+        virtual void getConfigurationParameter(YouBotJointParameter& parameter);
 
+        virtual void setConfigurationParameter(const YouBotJointParameter& parameter);
 
-  public:
-    virtual void getConfigurationParameter(YouBotJointParameterReadOnly& parameter);
+        virtual void getConfigurationParameter(JointName& parameter);
 
-    virtual void getConfigurationParameter(YouBotJointParameter& parameter);
+        virtual void setConfigurationParameter(const JointName& parameter);
 
-    virtual void setConfigurationParameter(const YouBotJointParameter& parameter);
+        virtual void getConfigurationParameter(GearRatio& parameter);
 
-    virtual void getConfigurationParameter(JointName& parameter);
+        virtual void setConfigurationParameter(const GearRatio& parameter);
 
-    virtual void setConfigurationParameter(const JointName& parameter);
+        virtual void getConfigurationParameter(EncoderTicksPerRound& parameter);
 
-    virtual void getConfigurationParameter(GearRatio& parameter);
+        virtual void setConfigurationParameter(const EncoderTicksPerRound& parameter);
 
-    virtual void setConfigurationParameter(const GearRatio& parameter);
+        virtual void setConfigurationParameter(const CalibrateJoint& parameter);
 
-    virtual void getConfigurationParameter(EncoderTicksPerRound& parameter);
+        virtual void
+        setConfigurationParameter(const InverseMovementDirection& parameter);
 
-    virtual void setConfigurationParameter(const EncoderTicksPerRound& parameter);
+        virtual void getConfigurationParameter(InverseMovementDirection& parameter);
 
-    virtual void setConfigurationParameter(const CalibrateJoint& parameter);
+        virtual void setConfigurationParameter(const JointLimits& parameter);
 
-    virtual void setConfigurationParameter(const InverseMovementDirection& parameter);
+        virtual void getConfigurationParameter(JointLimits& parameter);
 
-    virtual void getConfigurationParameter(InverseMovementDirection& parameter);
+        virtual void getConfigurationParameter(JointLimitsRadian& parameter);
 
-    virtual void setConfigurationParameter(const JointLimits& parameter);
+        /// commutation method for firmware 1.48 and below
+        virtual void setConfigurationParameter(const InitializeJoint& parameter);
 
-    virtual void getConfigurationParameter(JointLimits& parameter);
+        virtual void getConfigurationParameter(FirmwareVersion& parameter);
 
-    virtual void getConfigurationParameter(JointLimitsRadian& parameter);
+        /// this method should be only used if you know what you are doing
+        virtual void
+        setConfigurationParameter(const YouBotSlaveMailboxMsg& parameter);
 
-    /// commutation method for firmware 1.48 and below
-    virtual void setConfigurationParameter(const InitializeJoint& parameter);
+        /// this method should be only used if you know what you are doing
+        virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter);
 
-    virtual void getConfigurationParameter(FirmwareVersion& parameter);
+        virtual void getConfigurationParameter(TorqueConstant& parameter);
 
-    ///this method should be only used if you know what you are doing
-    virtual void setConfigurationParameter(const YouBotSlaveMailboxMsg& parameter);
+        virtual void setConfigurationParameter(const TorqueConstant& parameter);
 
-    ///this method should be only used if you know what you are doing
-    virtual void getConfigurationParameter(YouBotSlaveMailboxMsg& parameter);
+        /// stores the joint parameter permanent in the EEPROM of the motor contoller
+        /// Attentions: The EEPROM has only a finite number of program-erase cycles
+        void
+        storeConfigurationParameterPermanent(const YouBotJointParameter& parameter);
 
-    virtual void getConfigurationParameter(TorqueConstant& parameter);
+        /// Restores the joint parameter from the EEPROM.
+        void restoreConfigurationParameter(YouBotJointParameter& parameter);
 
-    virtual void setConfigurationParameter(const TorqueConstant& parameter);
+    protected:
+        virtual void setData(const JointDataSetpoint& data);
 
-    ///stores the joint parameter permanent in the EEPROM of the motor contoller
-    ///Attentions: The EEPROM has only a finite number of program-erase cycles
-    void storeConfigurationParameterPermanent(const YouBotJointParameter& parameter);
+        virtual void getData(JointData& data);
 
-    /// Restores the joint parameter from the EEPROM.
-    void restoreConfigurationParameter(YouBotJointParameter& parameter);
+    public:
+        /// commands a position or angle to one joint
+        ///@param data the to command position
+        virtual void setData(const JointAngleSetpoint& data);
 
+        /// commands a encoder value (position) to one joint
+        ///@param data the to command encoder value
+        virtual void setData(const JointEncoderSetpoint& data);
 
-  protected:
-    virtual void setData(const JointDataSetpoint& data);
+        /// gets the position or angle of one joint which have been calculated from
+        /// the actual encoder value
+        ///@param data returns the angle by reference
+        virtual void getData(JointSensedAngle& data);
 
-    virtual void getData(JointData& data);
+        /// commands a velocity to one joint
+        ///@param data the to command velocity
+        virtual void setData(const JointVelocitySetpoint& data);
+
+        /// gets the velocity of one joint
+        ///@param data returns the velocity by reference
+        virtual void getData(JointSensedVelocity& data);
+
+        /// gets the velocity in round per minute of one joint
+        ///@param data returns the velocity by reference
+        virtual void getData(JointSensedRoundsPerMinute& data);
+
+        /// sets the velocity in round per minute to one joint
+        ///@param data the setpoint velocity
+        virtual void setData(const JointRoundsPerMinuteSetpoint& data);
+
+        /// gets the motor current of one joint which have been measured by a hal
+        /// sensor
+        ///@param data returns the actual motor current by reference
+        virtual void getData(JointSensedCurrent& data);
+
+        /// commands a current to one joint
+        ///@param data the to command current
+        virtual void setData(const JointCurrentSetpoint& data);
 
+        /// gets the encoder ticks of one joint
+        ///@param data returns the ticks by reference
+        virtual void getData(JointSensedEncoderTicks& data);
 
-  public:
-    ///commands a position or angle to one joint
-    ///@param data the to command position
-    virtual void setData(const JointAngleSetpoint& data);
+        /// sets the output part of a EtherCAT slave message
+        /// this methode should be only used if you know what you are doing
+        ///@param data output part of a EtherCAT slave message
+        virtual void setData(const SlaveMessageOutput& data);
 
-    ///commands a encoder value (position) to one joint
-    ///@param data the to command encoder value
-    virtual void setData(const JointEncoderSetpoint& data);
+        /// gets the input and ouput part of a EtherCAT slave message
+        /// this methode should be only used if you know what you are doing
+        ///@param data returns the sensor values by reference
+        virtual void getData(YouBotSlaveMsg& data);
 
-    ///gets the position or angle of one joint which have been calculated from the actual encoder value 
-    ///@param data returns the angle by reference
-    virtual void getData(JointSensedAngle& data);
+        /// commands a torque to one joint
+        ///@param data the to command torque
+        virtual void setData(const JointTorqueSetpoint& data);
 
-    ///commands a velocity to one joint
-    ///@param data the to command velocity
-    virtual void setData(const JointVelocitySetpoint& data);
+        /// gets the motor torque of one joint which have been calculated from the
+        /// current
+        ///@param data returns the actual motor torque by reference
+        virtual void getData(JointSensedTorque& data);
 
-    ///gets the velocity of one joint
-    ///@param data returns the velocity by reference
-    virtual void getData(JointSensedVelocity& data);
+        /// gets the target or setpoint position of one joint (only firmware 2.0 or
+        /// higher)
+        ///@param data returns the angle by reference
+        virtual void getData(JointAngleSetpoint& data);
 
-    ///gets the velocity in round per minute of one joint
-    ///@param data returns the velocity by reference
-    virtual void getData(JointSensedRoundsPerMinute& data);
+        /// gets the target or setpoint velocity of one joint (only firmware 2.0 or
+        /// higher)
+        ///@param data returns the velocity by reference
+        virtual void getData(JointVelocitySetpoint& data);
 
-    ///sets the velocity in round per minute to one joint
-    ///@param data the setpoint velocity
-    virtual void setData(const JointRoundsPerMinuteSetpoint& data);
+        /// gets the motor current target or setpoint of one joint (only firmware 2.0
+        /// or higher)
+        ///@param data returns the motor current by reference
+        virtual void getData(JointCurrentSetpoint& data);
 
-    ///gets the motor current of one joint which have been measured by a hal sensor
-    ///@param data returns the actual motor current by reference
-    virtual void getData(JointSensedCurrent& data);
+        /// gets the ramp generator velocity of one joint (only firmware 2.0 or
+        /// higher)
+        ///@param data returns the velocity by reference
+        virtual void getData(JointRampGeneratorVelocity& data);
 
-    ///commands a current to one joint
-    ///@param data the to command current
-    virtual void setData(const JointCurrentSetpoint& data);
+        void getUserVariable(const unsigned int index, int& data);
 
-    ///gets the encoder ticks of one joint
-    ///@param data returns the ticks by reference
-    virtual void getData(JointSensedEncoderTicks& data);
+        void setUserVariable(const unsigned int index, const int data);
 
-    ///sets the output part of a EtherCAT slave message
-    ///this methode should be only used if you know what you are doing
-    ///@param data output part of a EtherCAT slave message
-    virtual void setData(const SlaveMessageOutput& data);
+        /// Returns the status messages for the motor controller.
+        virtual void getStatus(std::vector<std::string>& statusMessages);
 
-    ///gets the input and ouput part of a EtherCAT slave message
-    ///this methode should be only used if you know what you are doing
-    ///@param data returns the sensor values by reference
-    virtual void getData(YouBotSlaveMsg& data);
+        /// Returns the status messages as status flags for the motor controller. The
+        /// status flag bits are assigned like this:
+        /// 0:  Overcurrent
+        /// 1:  Undervoltage
+        /// 2:  Overvoltage
+        /// 3:  Overtemperature
+        /// 4:  Motor halted
+        /// 5:  Hall error flag
+        /// 6:  ---
+        /// 7:  ---
+        /// 8:  PWM mode active
+        /// 9:  Velocity mode active
+        /// 10: Position mode active
+        /// 11: Torque mode active
+        /// 12: ---
+        /// 13: ---
+        /// 14: Position end flag
+        /// 15: Module initialized
+        /// 16: EtherCAT timeout flag
+        /// 17: I2t exceeded flag
+        virtual void getStatus(unsigned int& statusFlags);
 
-    ///commands a torque to one joint
-    ///@param data the to command torque
-    virtual void setData(const JointTorqueSetpoint& data);
+        /// set the encoder values of the joint to zero. This postion will be the new
+        /// reference.
+        void setEncoderToZero();
 
-    ///gets the motor torque of one joint which have been calculated from the current
-    ///@param data returns the actual motor torque by reference
-    virtual void getData(JointSensedTorque& data);
+        void noMoreAction();
 
-    ///gets the target or setpoint position of one joint (only firmware 2.0 or higher)
-    ///@param data returns the angle by reference
-    virtual void getData(JointAngleSetpoint& data);
+        void stopJoint();
 
-    ///gets the target or setpoint velocity of one joint (only firmware 2.0 or higher)
-    ///@param data returns the velocity by reference
-    virtual void getData(JointVelocitySetpoint& data);
+        unsigned int getJointNumber();
 
-    ///gets the motor current target or setpoint of one joint (only firmware 2.0 or higher)
-    ///@param data returns the motor current by reference
-    virtual void getData(JointCurrentSetpoint& data);
+    private:
+        void parseYouBotErrorFlags(const YouBotSlaveMsg& messageBuffer);
 
-    ///gets the ramp generator velocity of one joint (only firmware 2.0 or higher)
-    ///@param data returns the velocity by reference
-    virtual void getData(JointRampGeneratorVelocity& data);
+        void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg);
 
-    void getUserVariable(const unsigned int index, int& data);
+        bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message);
 
-    void setUserVariable(const unsigned int index, const int data);
+        bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg);
 
-    /// Returns the status messages for the motor controller. 
-    virtual void getStatus(std::vector<std::string>& statusMessages);
+        EthercatMasterInterface* ethercatMaster;
 
-    /// Returns the status messages as status flags for the motor controller. The status flag bits are assigned like this:
-    /// 0:  Overcurrent
-    /// 1:  Undervoltage
-    /// 2:  Overvoltage
-    /// 3:  Overtemperature
-    /// 4:  Motor halted
-    /// 5:  Hall error flag
-    /// 6:  ---
-    /// 7:  ---
-    /// 8:  PWM mode active
-    /// 9:  Velocity mode active
-    /// 10: Position mode active
-    /// 11: Torque mode active
-    /// 12: ---
-    /// 13: ---
-    /// 14: Position end flag
-    /// 15: Module initialized
-    /// 16: EtherCAT timeout flag
-    /// 17: I2t exceeded flag
-    virtual void getStatus(unsigned int& statusFlags);
+        bool positionReferenceToZero;
 
-    /// set the encoder values of the joint to zero. This postion will be the new reference.
-    void setEncoderToZero();
+        unsigned int timeTillNextMailboxUpdate;
 
-    void noMoreAction();
+        unsigned int mailboxMsgRetries;
 
-    void stopJoint();
+        YouBotJointStorage storage;
 
-    unsigned int getJointNumber();
+        YouBotSlaveMsg messageBuffer;
 
+        quantity<si::angular_velocity> lastVelocity;
 
-  private:
-    void parseYouBotErrorFlags(const YouBotSlaveMsg& messageBuffer);
+        quantity<plane_angle> lastPosition;
 
-    void parseMailboxStatusFlags(const YouBotSlaveMailboxMsg& mailboxMsg);
-
-    bool retrieveValueFromMotorContoller(YouBotSlaveMailboxMsg& message);
-
-    bool setValueToMotorContoller(const YouBotSlaveMailboxMsg& mailboxMsg);
-
-
-  public:
-    JointTrajectoryController trajectoryController;
-
-
-  private:
-    EthercatMasterInterface* ethercatMaster;
-
-    bool positionReferenceToZero;
-
-    unsigned int timeTillNextMailboxUpdate;
-
-    unsigned int mailboxMsgRetries;
-
-    YouBotJointStorage storage;
-
-    YouBotSlaveMsg messageBuffer;
-
-    quantity<si::angular_velocity> lastVelocity;
-
-    quantity<plane_angle> lastPosition;
-
-    boost::scoped_ptr<JointLimitMonitor> limitMonitor;
-
-};
+        boost::scoped_ptr<JointLimitMonitor> limitMonitor;
+    };
 
 } // namespace youbot
 #endif

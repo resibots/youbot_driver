@@ -16,7 +16,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -50,6 +50,4 @@
  ****************************************************************/
 #include "youbot_driver/generic-joint/JointTrajectory.hpp"
 namespace youbot {
-
-
 } // namespace youbot

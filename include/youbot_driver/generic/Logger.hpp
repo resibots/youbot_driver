@@ -50,27 +50,25 @@
  ****************************************************************/
 
 #ifndef YOUBOT_LOGGER_HPP
-#define	YOUBOT_LOGGER_HPP
+#define YOUBOT_LOGGER_HPP
 
 #include <iostream>
 #include <fstream>
 #include "boost/date_time/posix_time/posix_time.hpp"
 
 #ifdef USE_ROS_LOGGING
-	#include <ros/ros.h>
+#include <ros/ros.h>
 #endif
 
 namespace youbot {
 
-    enum severity_level {
-        trace,
+    enum severity_level { trace,
         debug,
         info,
         warning,
         error,
-        fatal
-    };
-    
+        fatal };
+
     ///////////////////////////////////////////////////////////////////////////////
     /// Implementation logging to console and to a file
     ///////////////////////////////////////////////////////////////////////////////
@@ -79,30 +77,31 @@ namespace youbot {
         std::stringstream out;
         bool print;
         severity_level level;
-    public:
 
-        Logger(const std::string &funcName, const int &lineNo, const std::string &fileName, severity_level level);
+    public:
+        Logger(const std::string& funcName, const int& lineNo,
+            const std::string& fileName, severity_level level);
         ~Logger();
-        
+
         static bool toConsole;
         static bool toFile;
         static bool toROS;
         static severity_level logginLevel;
 
         template <class T>
-        Logger & operator<<(const T &v) {
+        Logger& operator<<(const T& v)
+        {
             out << v;
             return *this;
         }
     };
 
 #ifdef _MSC_VER
-	#define LOG(level) Logger(__FUNCTION__, __LINE__ , __FILE__, level)
+#define LOG(level) Logger(__FUNCTION__, __LINE__, __FILE__, level)
 #else
-	#define LOG(level) Logger(__PRETTY_FUNCTION__, __LINE__ , __FILE__, level)
+#define LOG(level) Logger(__PRETTY_FUNCTION__, __LINE__, __FILE__, level)
 #endif
 
 } // namespace youbot
 
-#endif	/* YOUBOT_LOGGER_HPP */
-
+#endif /* YOUBOT_LOGGER_HPP */

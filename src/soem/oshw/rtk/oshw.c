@@ -30,8 +30,8 @@
  */
 uint16 oshw_htons(const uint16 host)
 {
-	uint16 network = htons (host);
-	return network;
+    uint16 network = htons(host);
+    return network;
 }
 
 /**
@@ -42,27 +42,26 @@ uint16 oshw_htons(const uint16 host)
  */
 uint16 oshw_ntohs(const uint16 network)
 {
-	uint16 host = ntohs (network);
-	return host;
+    uint16 host = ntohs(network);
+    return host;
 }
 
 /* Create list over available network adapters.
  * @return First element in linked list of adapters
  */
-ec_adaptert * oshw_find_adapters(void)
+ec_adaptert* oshw_find_adapters(void)
 {
-   ec_adaptert * ret_adapter = NULL;
+    ec_adaptert* ret_adapter = NULL;
 
-   /* TODO if needed */
+    /* TODO if needed */
 
-   return ret_adapter;
+    return ret_adapter;
 }
 
 /** Free memory allocated memory used by adapter collection.
  * @param[in] adapter = First element in linked list of adapters
  * EC_NOFRAME.
  */
-void oshw_free_adapters(ec_adaptert * adapter)
-{
-	   /* TODO if needed */
+void oshw_free_adapters(ec_adaptert* adapter)
+{ /* TODO if needed */
 }

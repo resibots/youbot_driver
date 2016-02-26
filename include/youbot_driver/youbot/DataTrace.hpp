@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -66,116 +66,115 @@
 using namespace boost::posix_time;
 namespace youbot {
 
+    enum DataTraceCntrollerMode {
+        POSITION_CONTROL_RAD,
+        POSITION_CONTROL_ENC,
+        VELOCITY_CONTROL_RAD_SEC,
+        VELOCITY_CONTROL_RPM,
+        CURRENT_CONTROL_MODE,
+        TORQUE_CONTROL_MODE,
+        NOT_DEFINED
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Creates a trace of all process data and reads all configuration parameter
+    /// from one joint
+    ///////////////////////////////////////////////////////////////////////////////
+    class DataTrace {
+    public:
+        DataTrace(YouBotJoint& youBotJoint, const std::string Name,
+            const bool overwriteFiles = false);
 
-enum DataTraceCntrollerMode {
-    POSITION_CONTROL_RAD,
-    POSITION_CONTROL_ENC,
-    VELOCITY_CONTROL_RAD_SEC,
-    VELOCITY_CONTROL_RPM,
-    CURRENT_CONTROL_MODE,
-    TORQUE_CONTROL_MODE,
-    NOT_DEFINED
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Creates a trace of all process data and reads all configuration parameter from one joint
-///////////////////////////////////////////////////////////////////////////////
-class DataTrace {
-  public:
-    DataTrace(YouBotJoint& youBotJoint, const std::string Name, const bool overwriteFiles = false);
+        virtual ~DataTrace();
 
-    virtual ~DataTrace();
+        void startTrace();
 
-    void startTrace();
+        void stopTrace();
 
-    void stopTrace();
+        void plotTrace();
 
-    void plotTrace();
+        void updateTrace(const JointAngleSetpoint& setpoint);
 
-    void updateTrace(const JointAngleSetpoint& setpoint);
+        void updateTrace(const JointVelocitySetpoint& setpoint);
 
-    void updateTrace(const JointVelocitySetpoint& setpoint);
+        void updateTrace(const JointRoundsPerMinuteSetpoint& setpoint);
 
-    void updateTrace(const JointRoundsPerMinuteSetpoint& setpoint);
+        void updateTrace(const JointCurrentSetpoint& setpoint);
 
-    void updateTrace(const JointCurrentSetpoint& setpoint);
+        void updateTrace(const JointTorqueSetpoint& setpoint);
 
-    void updateTrace(const JointTorqueSetpoint& setpoint);
+        void updateTrace(const JointEncoderSetpoint& setpoint);
 
-    void updateTrace(const JointEncoderSetpoint& setpoint);
+        void updateTrace();
 
-    void updateTrace();
+        unsigned long getTimeDurationMilliSec();
 
-    unsigned long getTimeDurationMilliSec();
+    private:
+        DataTrace(const DataTrace& source);
 
+        DataTrace& operator=(const DataTrace& source);
 
-  private:
-    DataTrace(const DataTrace & source);
+        void update();
 
-    DataTrace & operator=(const DataTrace & source);
+        YouBotJoint& joint;
 
-    void update();
+        JointSensedAngle sensedAngle;
 
-    YouBotJoint& joint;
+        JointSensedEncoderTicks sensedEncoderTicks;
 
-    JointSensedAngle sensedAngle;
+        JointSensedVelocity sensedVelocity;
 
-    JointSensedEncoderTicks sensedEncoderTicks;
+        JointSensedRoundsPerMinute sensedRoundsPerMinute;
 
-    JointSensedVelocity sensedVelocity;
+        JointSensedCurrent sensedCurrent;
 
-    JointSensedRoundsPerMinute sensedRoundsPerMinute;
+        JointSensedTorque sensedTorque;
 
-    JointSensedCurrent sensedCurrent;
+        std::fstream file;
 
-    JointSensedTorque sensedTorque;
+        JointAngleSetpoint angleSetpoint;
 
-    std::fstream file;
+        JointVelocitySetpoint velocitySetpoint;
 
-    JointAngleSetpoint angleSetpoint;
+        JointRoundsPerMinuteSetpoint roundsPerMinuteSetpoint;
 
-    JointVelocitySetpoint velocitySetpoint;
+        JointCurrentSetpoint currentSetpoint;
 
-    JointRoundsPerMinuteSetpoint roundsPerMinuteSetpoint;
+        JointTorqueSetpoint torqueSetpoint;
 
-    JointCurrentSetpoint currentSetpoint;
+        JointPWMSetpoint PWMSetpoint;
 
-    JointTorqueSetpoint torqueSetpoint;
+        JointEncoderSetpoint encoderSetpoint;
 
-    JointPWMSetpoint PWMSetpoint;
+        std::fstream parametersBeginTraceFile;
 
-    JointEncoderSetpoint encoderSetpoint;
+        std::fstream parametersEndTraceFile;
 
-    std::fstream parametersBeginTraceFile;
+        ptime traceStartTime;
 
-    std::fstream parametersEndTraceFile;
+        time_duration timeDuration;
 
-    ptime traceStartTime;
+        unsigned long timeDurationMicroSec;
 
-    time_duration timeDuration;
+        DataTraceCntrollerMode controllerMode;
 
-    unsigned long timeDurationMicroSec;
+        JointSensedPWM actualPWM;
 
-    DataTraceCntrollerMode controllerMode;
+        std::vector<YouBotJointParameterReadOnly*> parameterVector;
 
-    JointSensedPWM actualPWM;
+        std::string name;
 
-    std::vector<YouBotJointParameterReadOnly*> parameterVector;
+        std::string path;
 
-    std::string name;
+        int invertDirection;
 
-    std::string path;
+        JointRampGeneratorVelocity rampGenSetpoint;
 
-    int invertDirection;
+        JointCurrentSetpoint targetCurrent;
 
-    JointRampGeneratorVelocity rampGenSetpoint;
+        JointVelocitySetpoint targetVelocity;
 
-    JointCurrentSetpoint targetCurrent;
-
-    JointVelocitySetpoint targetVelocity;
-
-    JointAngleSetpoint targetAngle;
-
-};
+        JointAngleSetpoint targetAngle;
+    };
 
 } // namespace youbot
 #endif

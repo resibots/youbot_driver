@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -56,26 +56,24 @@
 #include "youbot_driver/generic-joint/JointData.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// Joint Trajectory Segment
-///////////////////////////////////////////////////////////////////////////////
-struct TrajectorySegment
-{
-  quantity<plane_angle> positions;
-  quantity<angular_velocity> velocities;
-  quantity<angular_acceleration> accelerations;
-  boost::posix_time::time_duration time_from_start;
-};
-///////////////////////////////////////////////////////////////////////////////
-/// Joint Trajectory representation
-///////////////////////////////////////////////////////////////////////////////
-class JointTrajectory {
-  public:
-    std::vector< TrajectorySegment > segments;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Joint Trajectory Segment
+    ///////////////////////////////////////////////////////////////////////////////
+    struct TrajectorySegment {
+        quantity<plane_angle> positions;
+        quantity<angular_velocity> velocities;
+        quantity<angular_acceleration> accelerations;
+        boost::posix_time::time_duration time_from_start;
+    };
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Joint Trajectory representation
+    ///////////////////////////////////////////////////////////////////////////////
+    class JointTrajectory {
+    public:
+        std::vector<TrajectorySegment> segments;
 
-    boost::posix_time::ptime start_time;
-
-};
+        boost::posix_time::ptime start_time;
+    };
 
 } // namespace youbot
 #endif

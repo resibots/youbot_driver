@@ -57,11 +57,13 @@
 
 namespace youbot {
 
-#define SLEEP_MILLISEC(millisec) boost::this_thread::sleep(boost::posix_time::milliseconds((millisec)));
-#define SLEEP_MICROSEC(microsec) boost::this_thread::sleep(boost::posix_time::microseconds((microsec)));
+#define SLEEP_MILLISEC(millisec) \
+    boost::this_thread::sleep(boost::posix_time::milliseconds((millisec)));
+#define SLEEP_MICROSEC(microsec) \
+    boost::this_thread::sleep(boost::posix_time::microseconds((microsec)));
 
-#define SLEEP_SEC(sec) boost::this_thread::sleep(boost::posix_time::seconds((sec)));
-
+#define SLEEP_SEC(sec) \
+    boost::this_thread::sleep(boost::posix_time::seconds((sec)));
 
 } // namespace youbot
-#endif //YOUBOT_TIME_HPP
+#endif // YOUBOT_TIME_HPP

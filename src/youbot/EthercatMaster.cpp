@@ -16,7 +16,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -54,35 +54,41 @@
 
 namespace youbot {
 
-EthercatMasterInterface* EthercatMaster::instance = 0;
-///creates a instance of the singleton EthercatMaster if there is none and returns a reference to it
-///@param configFile configuration file name incl. the extension
-///@param configFilePath the path where the configuration is located with a / at the end
-///@param ethercatMasterWithThread set it to false if you want to deactivate the communication thread
-EthercatMasterInterface& EthercatMaster::getInstance(const std::string configFile, const std::string configFilePath, const bool ethercatMasterWithThread)
-{
-  // Bouml preserved body begin 000E61F1
-    if (instance == 0) {
-      if(ethercatMasterWithThread){
-        instance = new EthercatMasterWithThread(configFile, configFilePath);
-      }else{
-        instance = new EthercatMasterWithoutThread(configFile, configFilePath);
-      }
+    EthercatMasterInterface* EthercatMaster::instance = 0;
+    /// creates a instance of the singleton EthercatMaster if there is none and
+    /// returns a reference to it
+    ///@param configFile configuration file name incl. the extension
+    ///@param configFilePath the path where the configuration is located with a / at
+    /// the end
+    ///@param ethercatMasterWithThread set it to false if you want to deactivate the
+    /// communication thread
+    EthercatMasterInterface&
+    EthercatMaster::getInstance(const std::string configFile,
+        const std::string configFilePath,
+        const bool ethercatMasterWithThread)
+    {
+        // Bouml preserved body begin 000E61F1
+        if (instance == 0) {
+            if (ethercatMasterWithThread) {
+                instance = new EthercatMasterWithThread(configFile, configFilePath);
+            }
+            else {
+                instance = new EthercatMasterWithoutThread(configFile, configFilePath);
+            }
+        }
+        return *instance;
+        // Bouml preserved body end 000E61F1
     }
-    return *instance;
-  // Bouml preserved body end 000E61F1
-}
 
-/// destroy the singleton instance by calling the destructor
-void EthercatMaster::destroy()
-{
-  // Bouml preserved body begin 000E6271
-		if(instance != 0){
-			delete instance;
-			instance = 0;
-		}
-  // Bouml preserved body end 000E6271
-}
-
+    /// destroy the singleton instance by calling the destructor
+    void EthercatMaster::destroy()
+    {
+        // Bouml preserved body begin 000E6271
+        if (instance != 0) {
+            delete instance;
+            instance = 0;
+        }
+        // Bouml preserved body end 000E6271
+    }
 
 } // namespace youbot

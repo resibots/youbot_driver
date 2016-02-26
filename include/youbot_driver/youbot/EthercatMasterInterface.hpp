@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -54,7 +54,7 @@
 #include "youbot_driver/youbot/YouBotSlaveMsg.hpp"
 #include "youbot_driver/youbot/YouBotSlaveMailboxMsg.hpp"
 #include "youbot_driver/youbot/JointLimitMonitor.hpp"
-extern "C"{
+extern "C" {
 #include <youbot_driver/soem/ethercattype.h>
 #include <nicdrv.h>
 #include <youbot_driver/soem/ethercatmain.h>
@@ -62,73 +62,79 @@ extern "C"{
 
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// The Ethercat Master interface
-///////////////////////////////////////////////////////////////////////////////
-class EthercatMasterInterface {
-friend class EthercatMaster;
-friend class YouBotJoint;
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  protected:
-    EthercatMasterInterface() {};
+    ///////////////////////////////////////////////////////////////////////////////
+    /// The Ethercat Master interface
+    ///////////////////////////////////////////////////////////////////////////////
+    class EthercatMasterInterface {
+        friend class EthercatMaster;
+        friend class YouBotJoint;
+        friend class YouBotGripper;
+        friend class YouBotGripperBar;
 
-    virtual ~EthercatMasterInterface() {};
+    protected:
+        EthercatMasterInterface(){};
 
+        virtual ~EthercatMasterInterface(){};
 
-  public:
-    virtual bool isThreadActive() = 0;
+    public:
+        virtual bool isThreadActive() = 0;
 
-    ///return the quantity of ethercat slave which have an input/output buffer
-    virtual unsigned int getNumberOfSlaves() const = 0;
+        /// return the quantity of ethercat slave which have an input/output buffer
+        virtual unsigned int getNumberOfSlaves() const = 0;
 
-    virtual void AutomaticSendOn(const bool enableAutomaticSend) = 0;
+        virtual void AutomaticSendOn(const bool enableAutomaticSend) = 0;
 
-    virtual void AutomaticReceiveOn(const bool enableAutomaticReceive) = 0;
+        virtual void AutomaticReceiveOn(const bool enableAutomaticReceive) = 0;
 
-    ///provides all ethercat slave informations from the SOEM driver
-    ///@param ethercatSlaveInfos ethercat slave informations
-    virtual void getEthercatDiagnosticInformation(std::vector<ec_slavet>& ethercatSlaveInfos) = 0;
+        /// provides all ethercat slave informations from the SOEM driver
+        ///@param ethercatSlaveInfos ethercat slave informations
+        virtual void getEthercatDiagnosticInformation(
+            std::vector<ec_slavet>& ethercatSlaveInfos) = 0;
 
-    ///sends ethercat messages to the motor controllers
-    /// returns a true if everything it OK and returns false if something fail
-    virtual bool sendProcessData() = 0;
+        /// sends ethercat messages to the motor controllers
+        /// returns a true if everything it OK and returns false if something fail
+        virtual bool sendProcessData() = 0;
 
-    /// receives ethercat messages from the motor controllers
-    /// returns a true if everything it OK and returns false if something fail
-    virtual bool receiveProcessData() = 0;
+        /// receives ethercat messages from the motor controllers
+        /// returns a true if everything it OK and returns false if something fail
+        virtual bool receiveProcessData() = 0;
 
-    /// checks if an error has occurred in the soem driver
-    /// returns a true if an error has occurred
-    virtual bool isErrorInSoemDriver() = 0;
+        /// checks if an error has occurred in the soem driver
+        /// returns a true if an error has occurred
+        virtual bool isErrorInSoemDriver() = 0;
 
-    virtual bool isEtherCATConnectionEstablished() = 0;
+        virtual bool isEtherCATConnectionEstablished() = 0;
 
-    virtual void registerJointLimitMonitor(JointLimitMonitor* object, const unsigned int JointNumber) = 0;
+        virtual void registerJointLimitMonitor(JointLimitMonitor* object,
+            const unsigned int JointNumber) = 0;
 
+    private:
+        /// stores a ethercat message to the buffer
+        ///@param msgBuffer ethercat message
+        ///@param jointNumber joint number of the sender joint
+        virtual void setMsgBuffer(const YouBotSlaveMsg& msgBuffer,
+            const unsigned int jointNumber) = 0;
 
-  private:
-    ///stores a ethercat message to the buffer
-    ///@param msgBuffer ethercat message
-    ///@param jointNumber joint number of the sender joint
-    virtual void setMsgBuffer(const YouBotSlaveMsg& msgBuffer, const unsigned int jointNumber) = 0;
+        /// get a ethercat message form the buffer
+        ///@param msgBuffer ethercat message
+        ///@param jointNumber joint number of the receiver joint
+        virtual void getMsgBuffer(const unsigned int jointNumber,
+            YouBotSlaveMsg& returnMsg) = 0;
 
-    ///get a ethercat message form the buffer
-    ///@param msgBuffer ethercat message
-    ///@param jointNumber joint number of the receiver joint
-    virtual void getMsgBuffer(const unsigned int jointNumber, YouBotSlaveMsg& returnMsg) = 0;
+        /// stores a mailbox message in a buffer which will be sent to the motor
+        /// controllers
+        ///@param msgBuffer ethercat mailbox message
+        ///@param jointNumber joint number of the sender joint
+        virtual void setMailboxMsgBuffer(const YouBotSlaveMailboxMsg& msgBuffer,
+            const unsigned int jointNumber) = 0;
 
-    ///stores a mailbox message in a buffer which will be sent to the motor controllers
-    ///@param msgBuffer ethercat mailbox message
-    ///@param jointNumber joint number of the sender joint
-    virtual void setMailboxMsgBuffer(const YouBotSlaveMailboxMsg& msgBuffer, const unsigned int jointNumber) = 0;
-
-    ///gets a mailbox message form the buffer which came form the motor controllers
-    ///@param msgBuffer ethercat mailbox message
-    ///@param jointNumber joint number of the receiver joint
-    virtual bool getMailboxMsgBuffer(YouBotSlaveMailboxMsg& mailboxMsg, const unsigned int jointNumber) = 0;
-
-};
+        /// gets a mailbox message form the buffer which came form the motor
+        /// controllers
+        ///@param msgBuffer ethercat mailbox message
+        ///@param jointNumber joint number of the receiver joint
+        virtual bool getMailboxMsgBuffer(YouBotSlaveMailboxMsg& mailboxMsg,
+            const unsigned int jointNumber) = 0;
+    };
 
 } // namespace youbot
 #endif

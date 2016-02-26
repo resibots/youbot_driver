@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -55,34 +55,39 @@
 #include "youbot_driver/youbot/EthercatMasterInterface.hpp"
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// The Ethercat Master factory
-///////////////////////////////////////////////////////////////////////////////
-class EthercatMaster {
-friend class YouBotJoint;
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  private:
-    static EthercatMasterInterface* instance;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// The Ethercat Master factory
+    ///////////////////////////////////////////////////////////////////////////////
+    class EthercatMaster {
+        friend class YouBotJoint;
+        friend class YouBotGripper;
+        friend class YouBotGripperBar;
 
-    EthercatMaster(){};
+    private:
+        static EthercatMasterInterface* instance;
 
-    EthercatMaster(const EthercatMaster& ) {};
+        EthercatMaster(){};
 
-    ~EthercatMaster(){};
+        EthercatMaster(const EthercatMaster&){};
 
+        ~EthercatMaster(){};
 
-  public:
-    ///creates a instance of the singleton EthercatMaster if there is none and returns a reference to it
-    ///@param configFile configuration file name incl. the extension
-    ///@param configFilePath the path where the configuration is located with a / at the end
-    ///@param ethercatMasterWithThread set it to false if you want to deactivate the communication thread
-    static EthercatMasterInterface& getInstance(const std::string configFile = "youbot-ethercat.cfg", const std::string configFilePath = "../config/", const bool ethercatMasterWithThread = true);
+    public:
+        /// creates a instance of the singleton EthercatMaster if there is none and
+        /// returns a reference to it
+        ///@param configFile configuration file name incl. the extension
+        ///@param configFilePath the path where the configuration is located with a /
+        /// at the end
+        ///@param ethercatMasterWithThread set it to false if you want to deactivate
+        /// the communication thread
+        static EthercatMasterInterface&
+        getInstance(const std::string configFile = "youbot-ethercat.cfg",
+            const std::string configFilePath = "../config/",
+            const bool ethercatMasterWithThread = true);
 
-    /// destroy the singleton instance by calling the destructor
-    static void destroy();
-
-};
+        /// destroy the singleton instance by calling the destructor
+        static void destroy();
+    };
 
 } // namespace youbot
 #endif

@@ -19,7 +19,7 @@
  *
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  *
- * This sofware is published under a dual-license: GNU Lesser General Public 
+ * This sofware is published under a dual-license: GNU Lesser General Public
  * License LGPL 2.1 and BSD license. The dual-license implies that users of this
  * code may choose which terms they prefer.
  *
@@ -70,129 +70,135 @@
 #include "youbot_driver/youbot/EthercatMasterInterface.hpp"
 #include "youbot_driver/youbot/JointLimitMonitor.hpp"
 
-extern "C"{
+extern "C" {
 #include <youbot_driver/soem/ethercattype.h>
 #include <youbot_driver/soem/ethercatmain.h>
 }
 
 namespace youbot {
 
-///////////////////////////////////////////////////////////////////////////////
-/// The Ethercat Master is managing the whole ethercat communication 
-/// It have to be a singleton in the system
-///////////////////////////////////////////////////////////////////////////////
-class EthercatMasterWithoutThread : public EthercatMasterInterface {
-friend class EthercatMaster;
-friend class YouBotJoint;
-friend class YouBotGripper;
-friend class YouBotGripperBar;
-  private:
-    EthercatMasterWithoutThread(const std::string& configFile, const std::string& configFilePath);
+    ///////////////////////////////////////////////////////////////////////////////
+    /// The Ethercat Master is managing the whole ethercat communication
+    /// It have to be a singleton in the system
+    ///////////////////////////////////////////////////////////////////////////////
+    class EthercatMasterWithoutThread : public EthercatMasterInterface {
+        friend class EthercatMaster;
+        friend class YouBotJoint;
+        friend class YouBotGripper;
+        friend class YouBotGripperBar;
 
-    ~EthercatMasterWithoutThread();
+    private:
+        EthercatMasterWithoutThread(const std::string& configFile,
+            const std::string& configFilePath);
 
+        ~EthercatMasterWithoutThread();
 
-  public:
-    bool isThreadActive();
+    public:
+        bool isThreadActive();
 
-    ///return the quantity of ethercat slave which have an input/output buffer
-    unsigned int getNumberOfSlaves() const;
+        /// return the quantity of ethercat slave which have an input/output buffer
+        unsigned int getNumberOfSlaves() const;
 
-    void AutomaticSendOn(const bool enableAutomaticSend);
+        void AutomaticSendOn(const bool enableAutomaticSend);
 
-    void AutomaticReceiveOn(const bool enableAutomaticReceive);
+        void AutomaticReceiveOn(const bool enableAutomaticReceive);
 
-    ///provides all ethercat slave informations from the SOEM driver
-    ///@param ethercatSlaveInfos ethercat slave informations
-    void getEthercatDiagnosticInformation(std::vector<ec_slavet>& ethercatSlaveInfos);
+        /// provides all ethercat slave informations from the SOEM driver
+        ///@param ethercatSlaveInfos ethercat slave informations
+        void
+        getEthercatDiagnosticInformation(std::vector<ec_slavet>& ethercatSlaveInfos);
 
-    ///sends ethercat messages to the motor controllers
-    /// returns a true if everything it OK and returns false if something fail
-    bool sendProcessData();
+        /// sends ethercat messages to the motor controllers
+        /// returns a true if everything it OK and returns false if something fail
+        bool sendProcessData();
 
-    /// receives ethercat messages from the motor controllers
-    /// returns a true if everything it OK and returns false if something fail
-    bool receiveProcessData();
+        /// receives ethercat messages from the motor controllers
+        /// returns a true if everything it OK and returns false if something fail
+        bool receiveProcessData();
 
-    /// checks if an error has occurred in the soem driver
-    /// returns a true if an error has occurred
-    bool isErrorInSoemDriver();
+        /// checks if an error has occurred in the soem driver
+        /// returns a true if an error has occurred
+        bool isErrorInSoemDriver();
 
-    bool isEtherCATConnectionEstablished();
+        bool isEtherCATConnectionEstablished();
 
-    void registerJointLimitMonitor(JointLimitMonitor* object, const unsigned int JointNumber);
+        void registerJointLimitMonitor(JointLimitMonitor* object,
+            const unsigned int JointNumber);
 
+    private:
+        /// establishes the ethercat connection
+        void initializeEthercat();
 
-  private:
-    ///establishes the ethercat connection
-    void initializeEthercat();
+        /// closes the ethercat connection
+        bool closeEthercat();
 
-    ///closes the ethercat connection
-    bool closeEthercat();
+        /// stores a ethercat message to the buffer
+        ///@param msgBuffer ethercat message
+        ///@param jointNumber joint number of the sender joint
+        void setMsgBuffer(const YouBotSlaveMsg& msgBuffer,
+            const unsigned int jointNumber);
 
-    ///stores a ethercat message to the buffer
-    ///@param msgBuffer ethercat message
-    ///@param jointNumber joint number of the sender joint
-    void setMsgBuffer(const YouBotSlaveMsg& msgBuffer, const unsigned int jointNumber);
+        /// get a ethercat message form the buffer
+        ///@param msgBuffer ethercat message
+        ///@param jointNumber joint number of the receiver joint
+        void getMsgBuffer(const unsigned int jointNumber, YouBotSlaveMsg& returnMsg);
 
-    ///get a ethercat message form the buffer
-    ///@param msgBuffer ethercat message
-    ///@param jointNumber joint number of the receiver joint
-    void getMsgBuffer(const unsigned int jointNumber, YouBotSlaveMsg& returnMsg);
+        /// stores a mailbox message in a buffer which will be sent to the motor
+        /// controllers
+        ///@param msgBuffer ethercat mailbox message
+        ///@param jointNumber joint number of the sender joint
+        void setMailboxMsgBuffer(const YouBotSlaveMailboxMsg& msgBuffer,
+            const unsigned int jointNumber);
 
-    ///stores a mailbox message in a buffer which will be sent to the motor controllers
-    ///@param msgBuffer ethercat mailbox message
-    ///@param jointNumber joint number of the sender joint
-    void setMailboxMsgBuffer(const YouBotSlaveMailboxMsg& msgBuffer, const unsigned int jointNumber);
+        /// gets a mailbox message form the buffer which came form the motor
+        /// controllers
+        ///@param msgBuffer ethercat mailbox message
+        ///@param jointNumber joint number of the receiver joint
+        bool getMailboxMsgBuffer(YouBotSlaveMailboxMsg& mailboxMsg,
+            const unsigned int jointNumber);
 
-    ///gets a mailbox message form the buffer which came form the motor controllers
-    ///@param msgBuffer ethercat mailbox message
-    ///@param jointNumber joint number of the receiver joint
-    bool getMailboxMsgBuffer(YouBotSlaveMailboxMsg& mailboxMsg, const unsigned int jointNumber);
+        /// sends the mailbox Messages which have been stored in the buffer
+        ///@param mailboxMsg ethercat mailbox message
+        bool sendMailboxMessage(const YouBotSlaveMailboxMsg& mailboxMsg);
 
-    ///sends the mailbox Messages which have been stored in the buffer
-    ///@param mailboxMsg ethercat mailbox message
-    bool sendMailboxMessage(const YouBotSlaveMailboxMsg& mailboxMsg);
+        /// receives mailbox messages and stores them in the buffer
+        ///@param mailboxMsg ethercat mailbox message
+        bool receiveMailboxMessage(YouBotSlaveMailboxMsg& mailboxMsg);
 
-    ///receives mailbox messages and stores them in the buffer
-    ///@param mailboxMsg ethercat mailbox message
-    bool receiveMailboxMessage(YouBotSlaveMailboxMsg& mailboxMsg);
+        void parseYouBotErrorFlags(const YouBotSlaveMsg& messageBuffer);
 
-    void parseYouBotErrorFlags(const YouBotSlaveMsg& messageBuffer);
+        std::string ethernetDevice;
 
-    std::string ethernetDevice;
+        std::vector<YouBotSlaveMsg> processDataBuffer;
 
-    std::vector<YouBotSlaveMsg> processDataBuffer;
+        unsigned int nrOfSlaves;
 
-    unsigned int nrOfSlaves;
+        std::vector<SlaveMessageOutput*> ethercatOutputBufferVector;
 
-    std::vector<SlaveMessageOutput*> ethercatOutputBufferVector;
+        std::vector<SlaveMessageInput*> ethercatInputBufferVector;
 
-    std::vector<SlaveMessageInput*> ethercatInputBufferVector;
+        std::vector<YouBotSlaveMailboxMsg> firstMailboxBufferVector;
 
-    std::vector<YouBotSlaveMailboxMsg> firstMailboxBufferVector;
+        ec_mbxbuft mailboxBufferSend;
 
-    ec_mbxbuft mailboxBufferSend;
+        unsigned int mailboxTimeout;
 
-    unsigned int mailboxTimeout;
+        ec_mbxbuft mailboxBufferReceive;
 
-    ec_mbxbuft mailboxBufferReceive;
+        ConfigFile* configfile;
 
-    ConfigFile* configfile;
+        std::vector<ec_slavet> ethercatSlaveInfo;
 
-    std::vector<ec_slavet> ethercatSlaveInfo;
+        char IOmap_[4096];
 
-    char IOmap_[4096];
+        unsigned int ethercatTimeout;
 
-    unsigned int ethercatTimeout;
+        static std::string configFileName;
 
-    static std::string configFileName;
+        static std::string configFilepath;
 
-    static std::string configFilepath;
-
-    bool ethercatConnectionEstablished;
-
-};
+        bool ethercatConnectionEstablished;
+    };
 
 } // namespace youbot
 #endif

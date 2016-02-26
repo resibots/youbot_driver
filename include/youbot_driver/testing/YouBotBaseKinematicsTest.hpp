@@ -18,24 +18,23 @@ using namespace youbot;
 /// A unit test for the base kinematics
 ///////////////////////////////////////////////////////////////////////////////
 class YouBotBaseKinematicsTest : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(YouBotBaseKinematicsTest);
-	CPPUNIT_TEST(youBotBaseKinematicsTest);
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(YouBotBaseKinematicsTest);
+    CPPUNIT_TEST(youBotBaseKinematicsTest);
+    CPPUNIT_TEST_SUITE_END();
 
 public:
-	YouBotBaseKinematicsTest();
-	virtual ~YouBotBaseKinematicsTest();
+    YouBotBaseKinematicsTest();
+    virtual ~YouBotBaseKinematicsTest();
 
-	void setUp();
-	void tearDown();
+    void setUp();
+    void tearDown();
 
-
-	void youBotBaseKinematicsTest();
+    void youBotBaseKinematicsTest();
 
 private:
-	unsigned int overallTime;
-	unsigned int startTime;
-	unsigned int updateCycle;
+    unsigned int overallTime;
+    unsigned int startTime;
+    unsigned int updateCycle;
 };
 
-#endif //YOU_BOT_BASE_KINEMATICS_TEST_H
+#endif // YOU_BOT_BASE_KINEMATICS_TEST_H

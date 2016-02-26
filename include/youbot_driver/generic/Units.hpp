@@ -50,7 +50,7 @@
  ****************************************************************/
 
 #ifndef YOUBOT_UNITS_HPP
-#define	YOUBOT_UNITS_HPP
+#define YOUBOT_UNITS_HPP
 #include <boost/units/io.hpp>
 #include <boost/units/pow.hpp>
 #include <boost/units/systems/si.hpp>
@@ -59,24 +59,26 @@
 #include <boost/units/make_scaled_unit.hpp>
 #include <boost/units/systems/si/prefixes.hpp>
 
-
 using namespace boost::units;
 using namespace boost::units::si;
 using namespace boost::units::angle;
 
-//typedef boost::units::si::length meter;
+// typedef boost::units::si::length meter;
 using boost::units::si::meters;
 namespace youbot {
 
-typedef boost::units::make_scaled_unit<si::length, boost::units::scale<10, boost::units::static_rational<-3> > >::type millimeter;
-typedef boost::units::make_scaled_unit<si::length, boost::units::scale<10, boost::units::static_rational<-2> > >::type centimeter;
-BOOST_UNITS_STATIC_CONSTANT(centimeters, centimeter);
+    typedef boost::units::make_scaled_unit<si::length,
+        boost::units::scale<10, boost::units::static_rational<-3> > >::type
+        millimeter;
+    typedef boost::units::make_scaled_unit<si::length,
+        boost::units::scale<10, boost::units::static_rational<-2> > >::type
+        centimeter;
+    BOOST_UNITS_STATIC_CONSTANT(centimeters, centimeter);
 
-
-typedef boost::units::make_scaled_unit<si::time, boost::units::scale<10, boost::units::static_rational<-3> > >::type millisecond;
-//BOOST_UNITS_STATIC_CONSTANT(millimeters, millimeter);
+    typedef boost::units::make_scaled_unit<si::time, boost::units::scale<10, boost::units::static_rational<-3> > >::type
+        millisecond;
+    // BOOST_UNITS_STATIC_CONSTANT(millimeters, millimeter);
 
 } // namespace youbot
 
-#endif	/* YOUBOT_UNITS_HPP */
-
+#endif /* YOUBOT_UNITS_HPP */

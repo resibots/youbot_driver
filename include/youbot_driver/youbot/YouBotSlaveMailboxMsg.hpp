@@ -50,7 +50,7 @@
  ****************************************************************/
 
 #ifndef _YOUBOT_SLAVE_MAILBOX_MESSAGE_H
-#define	_YOUBOT_SLAVE_MAILBOX_MESSAGE_H
+#define _YOUBOT_SLAVE_MAILBOX_MESSAGE_H
 
 #include <youbot_driver/soem/ethercattype.h>
 #include <string>
@@ -59,160 +59,152 @@
 
 namespace youbot {
 
-  /// Output part from the EtherCAT mailbox message of the youBot slaves
+    /// Output part from the EtherCAT mailbox message of the youBot slaves
 
-  PACKED_BEGIN
-  struct mailboxOutputBuffer {
-    uint8 moduleAddress; //0 = Drive  1 = Gripper
-    uint8 commandNumber;
-    uint8 typeNumber;
-    uint8 motorNumber; //always zero
-    uint32 value; //MSB first!
+    PACKED_BEGIN
+    struct mailboxOutputBuffer {
+        uint8 moduleAddress; // 0 = Drive  1 = Gripper
+        uint8 commandNumber;
+        uint8 typeNumber;
+        uint8 motorNumber; // always zero
+        uint32 value; // MSB first!
 
-    mailboxOutputBuffer() : moduleAddress(0), commandNumber(0), typeNumber(0), motorNumber(0), value(0) {};
-  } PACKED;
-  PACKED_END
+        mailboxOutputBuffer()
+            : moduleAddress(0), commandNumber(0), typeNumber(0), motorNumber(0), value(0){};
+    } PACKED;
+    PACKED_END
 
-  /// Input part from the EtherCAT mailbox message of the youBot slaves
+    /// Input part from the EtherCAT mailbox message of the youBot slaves
 
-  PACKED_BEGIN
-  struct mailboxInputBuffer {
-    uint8 replyAddress;
-    uint8 moduleAddress;
-    uint8 status; //(e.g. 100 means “no error”)
-    uint8 commandNumber;
-    uint32 value; //MSB first!
+    PACKED_BEGIN
+    struct mailboxInputBuffer {
+        uint8 replyAddress;
+        uint8 moduleAddress;
+        uint8 status; //(e.g. 100 means “no error”)
+        uint8 commandNumber;
+        uint32 value; // MSB first!
 
-    mailboxInputBuffer() : replyAddress(0), moduleAddress(0), status(0), commandNumber(0), value(0) {};
-  } PACKED;
-  PACKED_END
+        mailboxInputBuffer()
+            : replyAddress(0), moduleAddress(0), status(0), commandNumber(0), value(0){};
+    } PACKED;
+    PACKED_END
 
-  ///////////////////////////////////////////////////////////////////////////////
-  /// EtherCAT mailbox message of the youBot slaves 
-  ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+    /// EtherCAT mailbox message of the youBot slaves
+    ///////////////////////////////////////////////////////////////////////////////
 
- class YouBotSlaveMailboxMsg {
-  public:
+    class YouBotSlaveMailboxMsg {
+    public:
+        mailboxOutputBuffer stctOutput;
+        mailboxInputBuffer stctInput;
 
-    mailboxOutputBuffer stctOutput;
-    mailboxInputBuffer stctInput;
+        // Constructor
+        YouBotSlaveMailboxMsg() { slaveNumber = 1000; }
 
-    // Constructor
-    YouBotSlaveMailboxMsg() {
-      slaveNumber = 1000;
-    }
+        // Constructor
 
-    // Constructor
+        YouBotSlaveMailboxMsg(unsigned int slaveNo) { slaveNumber = slaveNo; }
+        // Copy-Constructor
 
-    YouBotSlaveMailboxMsg(unsigned int slaveNo) {
-      slaveNumber = slaveNo;
-    }
-    // Copy-Constructor
+        YouBotSlaveMailboxMsg(const YouBotSlaveMailboxMsg& copy)
+        {
+            stctOutput = copy.stctOutput;
+            stctInput = copy.stctInput;
+            slaveNumber = copy.slaveNumber;
+            parameterName = copy.parameterName;
+        }
 
-    YouBotSlaveMailboxMsg(const YouBotSlaveMailboxMsg& copy) {
-      stctOutput = copy.stctOutput;
-      stctInput = copy.stctInput;
-      slaveNumber = copy.slaveNumber;
-      parameterName = copy.parameterName;
-    }
-    
+        // Destructor
 
-    // Destructor
+        ~YouBotSlaveMailboxMsg() {}
 
-    ~YouBotSlaveMailboxMsg() {
-    }
+        // assignment operator
 
-    // assignment operator
+        YouBotSlaveMailboxMsg& operator=(const YouBotSlaveMailboxMsg& copy)
+        {
+            stctOutput = copy.stctOutput;
+            stctInput = copy.stctInput;
+            slaveNumber = copy.slaveNumber;
+            parameterName = copy.parameterName;
+            return *this;
+        }
 
-    YouBotSlaveMailboxMsg & operator=(const YouBotSlaveMailboxMsg& copy) {
-      stctOutput = copy.stctOutput;
-      stctInput = copy.stctInput;
-      slaveNumber = copy.slaveNumber;
-      parameterName = copy.parameterName;
-      return *this;
-    }
-    
-    std::string parameterName;
-    unsigned int slaveNumber;
-  };
-  
-  
-  ///////////////////////////////////////////////////////////////////////////////
-  /// EtherCAT mailbox message of the youBot slaves (thread safe)
-  ///////////////////////////////////////////////////////////////////////////////
-  class YouBotSlaveMailboxMsgThreadSafe {
-  public:
+        std::string parameterName;
+        unsigned int slaveNumber;
+    };
 
-    DataObjectLockFree<mailboxOutputBuffer> stctOutput;
-    DataObjectLockFree<mailboxInputBuffer> stctInput;
+    ///////////////////////////////////////////////////////////////////////////////
+    /// EtherCAT mailbox message of the youBot slaves (thread safe)
+    ///////////////////////////////////////////////////////////////////////////////
+    class YouBotSlaveMailboxMsgThreadSafe {
+    public:
+        DataObjectLockFree<mailboxOutputBuffer> stctOutput;
+        DataObjectLockFree<mailboxInputBuffer> stctInput;
 
-    // Constructor
-    YouBotSlaveMailboxMsgThreadSafe() {
-      slaveNumber.Set(1000);
-    }
+        // Constructor
+        YouBotSlaveMailboxMsgThreadSafe() { slaveNumber.Set(1000); }
 
-    // Constructor
+        // Constructor
 
-    YouBotSlaveMailboxMsgThreadSafe(unsigned int slaveNo) {
-      slaveNumber.Set(slaveNo);
-    }
-    // Copy-Constructor
+        YouBotSlaveMailboxMsgThreadSafe(unsigned int slaveNo)
+        {
+            slaveNumber.Set(slaveNo);
+        }
+        // Copy-Constructor
 
-    YouBotSlaveMailboxMsgThreadSafe(const YouBotSlaveMailboxMsgThreadSafe& copy) {
-      mailboxOutputBuffer tempStctOutput;
-      mailboxInputBuffer tempStctInput;
-      std::string tempParameterName;
-      unsigned int SlaveNumber;
-      
-      
-      copy.stctOutput.Get(tempStctOutput);
-      stctOutput.Set(tempStctOutput);
-      
-      copy.stctInput.Get(tempStctInput);
-      stctInput.Set(tempStctInput);
-      
-      copy.slaveNumber.Get(SlaveNumber);
-      slaveNumber.Set(SlaveNumber);
-      
-      copy.parameterName.Get(tempParameterName);
-      parameterName.Set(tempParameterName);
-    }
+        YouBotSlaveMailboxMsgThreadSafe(const YouBotSlaveMailboxMsgThreadSafe& copy)
+        {
+            mailboxOutputBuffer tempStctOutput;
+            mailboxInputBuffer tempStctInput;
+            std::string tempParameterName;
+            unsigned int SlaveNumber;
 
-    // Destructor
+            copy.stctOutput.Get(tempStctOutput);
+            stctOutput.Set(tempStctOutput);
 
-    ~YouBotSlaveMailboxMsgThreadSafe() {
-    }
+            copy.stctInput.Get(tempStctInput);
+            stctInput.Set(tempStctInput);
 
-    // assignment operator
+            copy.slaveNumber.Get(SlaveNumber);
+            slaveNumber.Set(SlaveNumber);
 
-    YouBotSlaveMailboxMsgThreadSafe & operator=(const YouBotSlaveMailboxMsgThreadSafe& copy) {
-      mailboxOutputBuffer tempStctOutput;
-      mailboxInputBuffer tempStctInput;
-      std::string tempParameterName;
-      unsigned int SlaveNumber;
-      
-      
-      copy.stctOutput.Get(tempStctOutput);
-      stctOutput.Set(tempStctOutput);
-      
-      copy.stctInput.Get(tempStctInput);
-      stctInput.Set(tempStctInput);
-      
-      copy.slaveNumber.Get(SlaveNumber);
-      slaveNumber.Set(SlaveNumber);
-      
-      copy.parameterName.Get(tempParameterName);
-      parameterName.Set(tempParameterName);
-      return *this;
-    }
+            copy.parameterName.Get(tempParameterName);
+            parameterName.Set(tempParameterName);
+        }
 
-    DataObjectLockFree<std::string> parameterName;
+        // Destructor
 
-    DataObjectLockFree<unsigned int> slaveNumber;
-  };
-  
- 
+        ~YouBotSlaveMailboxMsgThreadSafe() {}
+
+        // assignment operator
+
+        YouBotSlaveMailboxMsgThreadSafe&
+        operator=(const YouBotSlaveMailboxMsgThreadSafe& copy)
+        {
+            mailboxOutputBuffer tempStctOutput;
+            mailboxInputBuffer tempStctInput;
+            std::string tempParameterName;
+            unsigned int SlaveNumber;
+
+            copy.stctOutput.Get(tempStctOutput);
+            stctOutput.Set(tempStctOutput);
+
+            copy.stctInput.Get(tempStctInput);
+            stctInput.Set(tempStctInput);
+
+            copy.slaveNumber.Get(SlaveNumber);
+            slaveNumber.Set(SlaveNumber);
+
+            copy.parameterName.Get(tempParameterName);
+            parameterName.Set(tempParameterName);
+            return *this;
+        }
+
+        DataObjectLockFree<std::string> parameterName;
+
+        DataObjectLockFree<unsigned int> slaveNumber;
+    };
 
 } // namespace youbot
 
-#endif	/* _YOUBOT_SLAVE_MESSAGE_H */
+#endif /* _YOUBOT_SLAVE_MESSAGE_H */

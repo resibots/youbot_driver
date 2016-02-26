@@ -81,16 +81,10 @@ set(YOUBOT_DRIVER_SRC
   src/youbot/YouBotJoint.cpp
   src/youbot/JointLimitMonitor.cpp
   src/youbot/YouBotBase.cpp
-  src/youbot/YouBotManipulator.cpp
-  src/youbot/YouBotGripper.cpp
-  src/youbot/YouBotGripperBar.cpp
-  src/youbot/YouBotGripperParameter.cpp
   src/youbot/DataTrace.cpp
-  src/youbot/GripperDataTrace.cpp
   src/youbot/YouBotJointParameter.cpp
   src/youbot/YouBotJointParameterReadOnly.cpp
   src/youbot/YouBotJointParameterPasswordProtected.cpp
-  src/youbot/JointTrajectoryController.cpp
   src/base-kinematic/FourSwedishWheelOmniBaseKinematic.cpp
   src/base-kinematic/FourSwedishWheelOmniBaseKinematicConfiguration.cpp
 )

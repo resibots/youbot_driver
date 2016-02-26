@@ -18,9 +18,9 @@
  *------------------------------------------------------------------------------
  */
 
-/** \file 
+/** \file
  * \brief
- * Headerfile for ethercatbase.c 
+ * Headerfile for ethercatbase.c
  */
 
 #ifndef _oshw_
@@ -32,7 +32,7 @@
 
 uint16 oshw_htons(uint16 hostshort);
 uint16 oshw_ntohs(uint16 networkshort);
-ec_adaptert * oshw_find_adapters(void);
-void oshw_free_adapters(ec_adaptert * adapter);
+ec_adaptert* oshw_find_adapters(void);
+void oshw_free_adapters(ec_adaptert* adapter);
 
 #endif
