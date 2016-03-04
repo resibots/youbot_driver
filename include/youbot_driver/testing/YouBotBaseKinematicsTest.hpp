@@ -9,7 +9,6 @@
 #include <signal.h>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include "youbot_driver/youbot/YouBotBase.hpp"
-#include "youbot_driver/youbot/YouBotManipulator.hpp"
 #include "youbot_driver/youbot/DataTrace.hpp"
 
 using namespace youbot;
