@@ -1,9 +1,6 @@
 #include "youbot_driver/testing/YouBotBaseTest.hpp"
 #include "youbot_driver/testing/YouBotBaseTestWithoutThread.hpp"
-#include "youbot_driver/testing/YouBotArmTestWithoutThread.hpp"
 #include "youbot_driver/testing/YouBotBaseKinematicsTest.hpp"
-#include "youbot_driver/testing/YouBotArmTest.hpp"
-#include "youbot_driver/testing/YouBotGripperTest.hpp"
 #include <cppunit/CompilerOutputter.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
@@ -12,9 +9,6 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(YouBotBaseTestWithoutThread);
 CPPUNIT_TEST_SUITE_REGISTRATION(YouBotBaseTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(YouBotBaseKinematicsTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(YouBotArmTestWithoutThread);
-CPPUNIT_TEST_SUITE_REGISTRATION(YouBotArmTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(YouBotGripperTest);
 
 int main(int argc, char* argv[])
 {
