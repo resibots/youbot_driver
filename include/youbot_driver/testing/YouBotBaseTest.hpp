@@ -8,7 +8,6 @@
 #include <vector>
 #include <signal.h>
 #include "youbot_driver/youbot/YouBotBase.hpp"
-#include "youbot_driver/youbot/YouBotManipulator.hpp"
 #include "youbot_driver/youbot/DataTrace.hpp"
 
 using namespace youbot;
