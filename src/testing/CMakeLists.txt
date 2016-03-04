@@ -5,9 +5,6 @@ ADD_EXECUTABLE(base_arm_gripper_test
   YouBotBaseTest.cpp
   YouBotBaseTestWithoutThread.cpp
   YouBotBaseKinematicsTest.cpp
-  YouBotArmTest.cpp
-  YouBotArmTestWithoutThread.cpp
-  YouBotGripperTest.cpp
 )
 
 target_link_libraries(base_arm_gripper_test YouBotDriver cppunit)
